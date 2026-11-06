@@ -301,3 +301,27 @@
   .catalog-page-size select{font-size:10px}
 }
 @media(max-width:390px){.catalog-product-grid{grid-template-columns:1fr}}
+
+/* Footer institucional padronizado PintoExpress */
+.site-footer{margin-top:0;background:var(--green-deep);color:#fff;border-top:4px solid var(--maize)}
+.footer-main{display:grid;grid-template-columns:1.55fr .85fr .9fr 1.1fr;gap:42px;padding-top:53px;padding-bottom:48px}
+.footer-brand{display:inline-flex;align-items:center;gap:12px;color:#fff}
+.footer-brand-mark{width:46px;height:46px;display:grid;place-items:center;border-radius:13px;background:var(--maize);color:var(--green-deep);font-family:Manrope,sans-serif;font-size:25px;font-weight:900}
+.footer-brand>span:last-child{display:flex;flex-direction:column}
+.footer-brand strong{font-family:Manrope,sans-serif;font-size:23px;line-height:1;font-weight:850;letter-spacing:-.05em}
+.footer-brand small{font-size:8px;letter-spacing:.14em;font-weight:850;color:#c4d5c9;margin-top:6px}
+.footer-brand-column>p,.footer-contact-column>p{max-width:330px;margin:19px 0 16px;color:#d0ded4;font-size:12px;line-height:1.75}
+.footer-presence{display:flex;align-items:flex-start;gap:8px;color:#e6eee8;font-size:10px;line-height:1.5}
+.footer-presence>span{width:7px;height:7px;margin-top:4px;border-radius:50%;background:var(--maize);flex-shrink:0}
+.footer-column,.footer-contact-column{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.footer-column>strong,.footer-contact-column>strong{margin:3px 0 7px;color:#fff;font-family:Manrope,sans-serif;font-size:12px;font-weight:850}
+.footer-column>a{color:#cbd9cf;font-size:11px;font-weight:600;transition:color .18s}
+.footer-column>a:hover,.footer-contact-link:hover{color:var(--maize)}
+.footer-contact-column>p{margin:0 0 4px;font-size:11px}
+.footer-contact-link{display:inline-flex;align-items:center;gap:8px;color:var(--maize);font-size:11px;font-weight:850}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.13)}
+.footer-bottom-inner{min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:15px;color:#b8cabe;font-size:9px}
+.footer-bottom-inner>span:last-child{display:flex;align-items:center;gap:9px}
+.footer-bottom-inner i{width:4px;height:4px;border-radius:50%;background:var(--maize)}
+@media(max-width:900px){.footer-main{grid-template-columns:1.3fr 1fr 1fr;gap:30px}.footer-contact-column{grid-column:1/-1;padding-top:19px;border-top:1px solid rgba(255,255,255,.13)}}
+@media(max-width:600px){.footer-main{grid-template-columns:1fr 1fr;gap:27px 20px;padding-top:35px;padding-bottom:32px}.footer-brand-column{grid-column:1/-1}.footer-brand-column>p{max-width:420px;margin:14px 0 12px}.footer-column,.footer-contact-column{gap:10px}.footer-contact-column{grid-column:1/-1;padding-top:18px}.footer-bottom-inner{min-height:0;padding-top:15px;padding-bottom:15px;align-items:flex-start;flex-direction:column;gap:7px}.footer-column>a{font-size:10px}}
