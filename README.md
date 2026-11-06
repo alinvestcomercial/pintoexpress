@@ -42,3 +42,16 @@ Website e WhatsApp são duas portas de entrada para o mesmo backend. O cliente n
 
 ## Configuração de contacto
 Definir `NEXT_PUBLIC_WHATSAPP_NUMBER` com o número oficial em formato internacional, apenas dígitos (por exemplo, `2588XXXXXXXX`). Esta variável é pública e não deve conter tokens ou segredos.
+
+
+## Organização das páginas comerciais
+- `/` — homepage de descoberta e encaminhamento para o balcão
+- `/catalogo` — catálogo pesquisável e filtrável
+- `/produto/[slug]` — informação de cada produto
+- `/solucoes` — orientação por objectivo e dimensão da criação
+- `/como-comprar` — etapas e condições do processo de consulta
+- `/pedido` — lista de produtos e formulário de consulta
+- `/sobre` — apresentação institucional
+- `/contactos` — formulário e canais de atendimento
+
+O pedido é mantido localmente no navegador para permitir navegação entre catálogo, detalhes e formulário. Ainda não é uma encomenda persistida no servidor. O envio por WhatsApp depende da configuração de NEXT_PUBLIC_WHATSAPP_NUMBER; sem ela, o formulário informa a limitação e não confirma a recepção do pedido.
