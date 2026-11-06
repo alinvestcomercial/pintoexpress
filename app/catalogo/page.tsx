@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
-  ArrowDownUp, ArrowRight, Check, ChevronDown, Filter, HeartPulse,
+  ArrowDownUp, ArrowRight, Check, ChevronDown, Filter, HeartPulse, PackageSearch,
   Package, Plus, Search, ShoppingBasket, Wheat, X, Egg, Truck, ChevronLeft, ChevronRight
 } from "lucide-react";
 import { SiteFrame } from "../components/SiteChrome";
@@ -108,7 +108,7 @@ function CatalogContent() {
 
       <div className="catalog-results-head">
         <div><span className="eyebrow">Vitrine PintoExpress</span><h2>{q ? "Resultados da pesquisa" : selectedCategory === "Todos" ? "Produtos disponíveis para consulta" : selectedCategory}</h2><p>{filtered.length} {filtered.length === 1 ? "produto encontrado" : "produtos encontrados"}{q ? <> para <strong>“{params.get("q")}”</strong></> : null}. Preços e disponibilidade são confirmados no atendimento.</p></div>
-        <Link className="catalog-cart-shortcut" href="/pedido"><ShoppingBasket size={17}/><span>Meu pedido</span><b>{cartCount}</b><ArrowRight size={15}/></Link>
+        <div className="catalog-shortcuts"><Link className="catalog-orders-shortcut" href="/encomendas-entregas"><PackageSearch size={16}/> Acompanhar pedido</Link><Link className="catalog-cart-shortcut" href="/pedido"><ShoppingBasket size={17}/><span>Meu pedido</span><b>{cartCount}</b><ArrowRight size={15}/></Link>
       </div>
 
       <div className="catalog-results catalog-results-full">
