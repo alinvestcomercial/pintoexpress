@@ -325,3 +325,65 @@
 .footer-bottom-inner i{width:4px;height:4px;border-radius:50%;background:var(--maize)}
 @media(max-width:900px){.footer-main{grid-template-columns:1.3fr 1fr 1fr;gap:30px}.footer-contact-column{grid-column:1/-1;padding-top:19px;border-top:1px solid rgba(255,255,255,.13)}}
 @media(max-width:600px){.footer-main{grid-template-columns:1fr 1fr;gap:27px 20px;padding-top:35px;padding-bottom:32px}.footer-brand-column{grid-column:1/-1}.footer-brand-column>p{max-width:420px;margin:14px 0 12px}.footer-column,.footer-contact-column{gap:10px}.footer-contact-column{grid-column:1/-1;padding-top:18px}.footer-bottom-inner{min-height:0;padding-top:15px;padding-bottom:15px;align-items:flex-start;flex-direction:column;gap:7px}.footer-column>a{font-size:10px}}
+
+/* UX correction: normal document flow prevents catalog content/footer overlap */
+.site{min-height:100vh;display:flex;flex-direction:column}
+.site>main{display:block;flex:1 0 auto;min-width:0}
+.site-footer{position:relative;z-index:1;flex-shrink:0;clear:both;width:100%;margin-top:0;isolation:isolate}
+.catalog-main{position:relative;z-index:0;display:flow-root;padding-bottom:64px}
+.catalog-results-full{position:relative;display:flow-root;clear:both}
+.catalog-pagination{position:relative;z-index:0;clear:both;margin-bottom:0}
+.catalog-product-grid{position:relative;z-index:0}
+.catalog-hero,.catalog-main{overflow:visible}
+
+/* Solutions page — guided commercial journey */
+.solutions-hero{position:relative;overflow:hidden;background:linear-gradient(110deg,rgba(5,30,19,.97) 0%,rgba(11,65,40,.9) 65%,rgba(11,65,40,.76) 100%),url('https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=1900&q=85') center/cover;color:#fff}
+.solutions-hero-inner{min-height:420px;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);align-items:center;gap:65px;padding-top:42px;padding-bottom:48px}
+.solutions-breadcrumb{display:flex;align-items:center;gap:9px;margin-bottom:24px;color:#c6d5ca;font-size:10px;font-weight:700}
+.solutions-breadcrumb a:hover{color:var(--maize)}
+.solutions-hero-copy h1{max-width:760px;font-family:Manrope,sans-serif;font-size:clamp(42px,5vw,62px);line-height:1.06;letter-spacing:-.055em;margin:13px 0 17px}
+.solutions-hero-copy>p{max-width:680px;color:#e1eae3;font-size:15px;line-height:1.8;margin:0}
+.solutions-hero-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:27px}
+.solutions-primary{display:inline-flex;align-items:center;gap:9px;padding:14px 17px;border-radius:11px;background:var(--maize);color:var(--green-dark);font-size:11px;font-weight:900}
+.solutions-secondary{color:#fff;font-size:11px;font-weight:800;text-decoration:underline;text-underline-offset:4px}
+.solutions-hero-aside{padding:23px;border:1px solid rgba(255,255,255,.2);border-radius:17px;background:rgba(255,255,255,.09);backdrop-filter:blur(8px)}
+.solutions-aside-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:12px;background:var(--maize);color:var(--green-dark);margin-bottom:15px}
+.solutions-hero-aside>strong{font-family:Manrope,sans-serif;font-size:17px}
+.solutions-hero-aside>p{font-size:11px;line-height:1.65;color:#d6e2d9;margin:5px 0 17px}
+.solutions-hero-aside>div{display:grid;gap:9px;padding-top:14px;border-top:1px solid rgba(255,255,255,.17)}
+.solutions-hero-aside>div>span{display:flex;align-items:center;gap:8px;color:#f1f5f2;font-size:10px;font-weight:700}
+.solutions-hero-aside>div svg{color:var(--maize)}
+.solutions-main{padding-top:62px;padding-bottom:72px}
+.solutions-section-heading{display:flex;align-items:end;justify-content:space-between;gap:25px;margin-bottom:23px}
+.solutions-section-heading h2,.solutions-how-heading h2{font-family:Manrope,sans-serif;color:var(--green-dark);font-size:clamp(26px,3vw,34px);line-height:1.17;letter-spacing:-.045em;margin:7px 0}
+.solutions-section-heading p,.solutions-how-heading>p{color:var(--muted);font-size:12px;line-height:1.7;margin:0}
+.solutions-section-heading>a{display:inline-flex;align-items:center;gap:7px;color:var(--green);font-size:11px;font-weight:900;white-space:nowrap;padding-bottom:4px}
+.solutions-pathways{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.solutions-pathway-card{min-width:0;display:flex;flex-direction:column;padding:20px 19px 18px;border:1px solid var(--line);border-radius:17px;background:#fff;box-shadow:0 4px 15px rgba(18,48,31,.035);transition:transform .2s,border-color .2s,box-shadow .2s}
+.solutions-pathway-card:hover{transform:translateY(-3px);border-color:#bfd2c4;box-shadow:var(--shadow)}
+.solutions-pathway-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.solutions-pathway-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:13px;background:var(--soft);color:var(--green)}
+.solutions-pathway-number{color:#a0aca3;font-size:10px;font-weight:900;letter-spacing:.08em}
+.solutions-pathway-label{color:var(--green);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
+.solutions-pathway-card h3{font-family:Manrope,sans-serif;color:var(--green-dark);font-size:19px;line-height:1.2;letter-spacing:-.035em;margin:6px 0 8px}
+.solutions-pathway-card>p{min-height:61px;color:var(--muted);font-size:11px;line-height:1.65;margin:0}
+.solutions-needs{display:grid;gap:9px;padding:15px 0;margin-top:12px;border-top:1px solid #edf0ed}
+.solutions-needs>strong{font-size:10px;color:var(--green-dark);margin-bottom:2px}
+.solutions-needs>span{display:flex;align-items:flex-start;gap:7px;color:#657268;font-size:10px;line-height:1.45}
+.solutions-needs svg{color:var(--green);flex-shrink:0;margin-top:1px}
+.solutions-pathway-link{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:13px;border-top:1px solid #edf0ed;color:var(--green);font-size:10px;font-weight:900}
+.solutions-how{display:grid;grid-template-columns:.85fr 1.15fr;gap:50px;align-items:center;padding:53px 0 48px}
+.solutions-how-heading h2{font-size:29px}
+.solutions-steps{display:grid;gap:10px}
+.solutions-steps article{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:13px;background:#fff}
+.solutions-steps article>span{width:29px;height:29px;display:grid;place-items:center;flex-shrink:0;border-radius:9px;background:var(--soft);color:var(--green);font-size:11px;font-weight:900}
+.solutions-steps article strong{color:var(--green-dark);font-size:11px}
+.solutions-steps article p{color:var(--muted);font-size:10px;line-height:1.55;margin:3px 0 0}
+.solutions-contact-cta{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:20px;padding:27px 30px;border-radius:19px;background:var(--green-deep);color:#fff}
+.solutions-cta-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:13px;background:rgba(255,255,255,.12);color:var(--maize)}
+.solutions-contact-cta h2{font-family:Manrope,sans-serif;font-size:24px;line-height:1.2;letter-spacing:-.04em;margin:5px 0 6px}
+.solutions-contact-cta p{max-width:690px;color:#d4e1d8;font-size:10px;line-height:1.65;margin:0}
+.solutions-contact-cta>a{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:10px;background:var(--maize);color:var(--green-dark);font-size:10px;font-weight:900;white-space:nowrap}
+@media(max-width:1050px){.solutions-pathways{grid-template-columns:repeat(2,minmax(0,1fr))}.solutions-hero-inner{gap:35px}.solutions-how{gap:28px}}
+@media(max-width:760px){.solutions-hero-inner{grid-template-columns:1fr;gap:24px;min-height:0;padding-top:25px;padding-bottom:30px}.solutions-hero-copy h1{font-size:40px}.solutions-hero-copy>p{font-size:13px}.solutions-hero-aside{max-width:480px}.solutions-main{padding-top:42px;padding-bottom:50px}.solutions-section-heading{align-items:flex-start;flex-direction:column;gap:10px}.solutions-section-heading h2{font-size:27px}.solutions-pathways{grid-template-columns:1fr;gap:11px}.solutions-pathway-card{padding:18px}.solutions-pathway-card>p{min-height:0}.solutions-how{grid-template-columns:1fr;gap:18px;padding:38px 0 32px}.solutions-how-heading h2{font-size:26px}.solutions-contact-cta{grid-template-columns:42px 1fr;padding:21px;gap:13px}.solutions-cta-icon{width:40px;height:40px}.solutions-contact-cta h2{font-size:21px}.solutions-contact-cta>a{grid-column:1/-1;justify-self:start}}
+@media(max-width:420px){.solutions-hero-copy h1{font-size:35px}.solutions-hero-actions{align-items:flex-start;flex-direction:column;gap:13px}.solutions-contact-cta{grid-template-columns:1fr}.solutions-contact-cta>a{grid-column:1}}
