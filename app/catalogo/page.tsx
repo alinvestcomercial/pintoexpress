@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   ArrowDownUp, ArrowRight, Check, ChevronDown, Filter, HeartPulse,
-  LayoutGrid, List, Package, Plus, Search, ShoppingBasket, SlidersHorizontal,
-  Wheat, X, Egg, Truck
+  Package, Plus, Search, ShoppingBasket, Wheat, X, Egg, Truck, ChevronLeft, ChevronRight
 } from "lucide-react";
 import { SiteFrame } from "../components/SiteChrome";
 import { useCart } from "../components/CartProvider";
@@ -39,7 +38,8 @@ function CatalogContent() {
   const params = useSearchParams();
   const { add, items } = useCart();
   const [sort, setSort] = useState("recommended");
-  const [view, setView] = useState<"grid"|"list">("grid");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(12);
   const [addedId, setAddedId] = useState("");
   const q = (params.get("q") || "").trim().toLocaleLowerCase("pt");
   const category = params.get("categoria") || "Todos";
@@ -60,6 +60,11 @@ function CatalogContent() {
     if (sort === "popular") result.sort((a,b) => Number(Boolean(b.popular))-Number(Boolean(a.popular)));
     return result;
   }, [q,category,sort]);
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const visibleProducts = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  useEffect(() => { setPage(1); }, [q, category, sort, pageSize]);
 
   function addProduct(product: Product) {
     add({id:product.id,name:product.name,category:product.category});
@@ -106,18 +111,17 @@ function CatalogContent() {
         <Link className="catalog-cart-shortcut" href="/pedido"><ShoppingBasket size={17}/><span>Meu pedido</span><b>{cartCount}</b><ArrowRight size={15}/></Link>
       </div>
 
-      <div className="catalog-workspace">
-        <aside className="catalog-sidebar">
-          <div className="catalog-sidebar-title"><ShoppingBasket size={17}/><strong>Apoio à compra</strong></div>
-          <div className="catalog-sidebar-note"><span><Check size={15}/></span><div><strong>Compra com acompanhamento</strong><p>O pedido é uma consulta. Confirmamos consigo preço, stock e condições antes de qualquer encomenda.</p></div></div>
-          <Link href="/kits" className="catalog-kits-link"><span className="catalog-kits-mark"><Package size={18}/></span><span><strong>Procura uma solução completa?</strong><small>Explore os kits de criação</small></span><ArrowRight size={16}/></Link>
-        </aside>
-
-        <div className="catalog-results">
-          <div className="catalog-toolbar-premium"><span className="catalog-result-total"><strong>{filtered.length}</strong> {filtered.length===1?"produto":"produtos"}</span><div className="catalog-toolbar-actions"><label className="catalog-sort"><ArrowDownUp size={15}/><span>Ordenar:</span><select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Ordenar produtos"><option value="recommended">Recomendados</option><option value="popular">Mais procurados</option><option value="name">Nome (A–Z)</option><option value="category">Categoria</option></select><ChevronDown size={14}/></label><div className="catalog-view-toggle" aria-label="Modo de visualização"><button className={view==="grid"?"active":""} onClick={()=>setView("grid")} aria-label="Ver em grelha" aria-pressed={view==="grid"}><LayoutGrid size={17}/></button><button className={view==="list"?"active":""} onClick={()=>setView("list")} aria-label="Ver em lista" aria-pressed={view==="list"}><List size={18}/></button></div></div></div>
-
-          {filtered.length ? <div className={"catalog-product-grid"+(view==="list"?" is-list":"")}>
-            {filtered.map(p=><article className="catalog-product-card" key={p.id}>
+      <div className="catalog-results catalog-results-full">
+        <div className="catalog-toolbar-premium">
+          <span className="catalog-result-total"><strong>{filtered.length}</strong> {filtered.length===1?"produto":"produtos"}</span>
+          <div className="catalog-toolbar-actions">
+            <label className="catalog-sort"><ArrowDownUp size={15}/><span>Ordenar:</span><select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Ordenar produtos"><option value="recommended">Recomendados</option><option value="popular">Mais procurados</option><option value="name">Nome (A–Z)</option><option value="category">Categoria</option></select><ChevronDown size={14}/></label>
+            <label className="catalog-page-size"><span>Por página</span><select value={pageSize} onChange={e=>setPageSize(Number(e.target.value))} aria-label="Produtos por página"><option value={12}>12</option><option value={24}>24</option><option value={48}>48</option></select></label>
+          </div>
+        </div>
+        {filtered.length ? <>
+          <div className="catalog-product-grid">
+            {visibleProducts.map(p=><article className="catalog-product-card" key={p.id}>
               <Link href={"/produto/"+p.id} className="catalog-product-image" style={{backgroundImage:"url("+p.image+")"}} aria-label={"Ver detalhes de "+p.name}>
                 <span className="catalog-product-category">{p.category}</span>{p.tag && <span className="catalog-product-tag">{p.tag}</span>}
               </Link>
@@ -128,13 +132,18 @@ function CatalogContent() {
                 <div className="catalog-product-footer"><span className="catalog-price-note">Preço e stock <strong>sob consulta</strong></span><button className={addedId===p.id?"catalog-add-button is-added":"catalog-add-button"} onClick={()=>addProduct(p)}>{addedId===p.id?<><Check size={15}/> Adicionado</>:<><Plus size={15}/> Adicionar</>}</button></div>
               </div>
             </article>)}
-          </div> : <div className="catalog-empty"><span><Search size={25}/></span><h3>Não encontrámos esse produto.</h3><p>Experimente outro termo ou explore uma categoria diferente.</p><Link href="/catalogo">Limpar filtros <ArrowRight size={15}/></Link></div>}
-
-          <div className="catalog-bottom-help"><div className="catalog-help-icon"><HeartPulse size={20}/></div><div><strong>Não encontrou o que procura?</strong><p>Podemos ajudar a identificar o produto ou a solução adequada para a sua criação.</p></div><Link href="/contactos">Falar com a equipa <ArrowRight size={15}/></Link></div>
-        </div>
+          </div>
+          {pageCount > 1 && <nav className="catalog-pagination" aria-label="Paginação do catálogo">
+            <span className="catalog-pagination-summary">A mostrar <strong>{(currentPage-1)*pageSize+1}–{Math.min(currentPage*pageSize,filtered.length)}</strong> de <strong>{filtered.length}</strong> produtos</span>
+            <div className="catalog-pagination-controls">
+              <button type="button" onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={currentPage===1} aria-label="Página anterior"><ChevronLeft size={17}/><span>Anterior</span></button>
+              {Array.from({length:pageCount},(_,i)=>i+1).filter(n=>n===1||n===pageCount||Math.abs(n-currentPage)<=1).map((n,i,arr)=><span className="catalog-page-number-wrap" key={n}>{i>0&&n-arr[i-1]>1?<span className="catalog-page-dots">…</span>:null}<button type="button" className={currentPage===n?"active":""} onClick={()=>setPage(n)} aria-label={"Página "+n} aria-current={currentPage===n?"page":undefined}>{n}</button></span>)}
+              <button type="button" onClick={()=>setPage(p=>Math.min(pageCount,p+1))} disabled={currentPage===pageCount} aria-label="Página seguinte"><span>Seguinte</span><ChevronRight size={17}/></button>
+            </div>
+          </nav>}
+        </> : <div className="catalog-empty"><span><Search size={25}/></span><h3>Não encontrámos esse produto.</h3><p>Experimente outro termo ou explore uma categoria diferente.</p><Link href="/catalogo">Limpar filtros <ArrowRight size={15}/></Link></div>}
       </div>
     </section>
-    <section className="container catalog-service-strip"><div><span className="catalog-service-icon"><Truck size={20}/></span><span><strong>Entrega ou levantamento</strong><small>Consulte as modalidades e condições de recepção.</small></span><Link href="/entrega-levantamento">Ver serviço <ArrowRight size={14}/></Link></div><div><span className="catalog-service-icon"><Package size={20}/></span><span><strong>Kits de criação</strong><small>Uma forma diferente de reunir os artigos essenciais.</small></span><Link href="/kits">Ver kits <ArrowRight size={14}/></Link></div></section>
   </SiteFrame>;
 }
 
