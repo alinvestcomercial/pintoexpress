@@ -1,4 +1,4 @@
-import { ArrowRight, CalendarDays, CheckCircle2, MessageCircle, Phone, ShieldCheck, Truck, Wheat } from "lucide-react";
+import { ArrowRight, CalendarDays, CheckCircle2, MessageCircle, Phone, Search, ShieldCheck, Truck, Wheat } from "lucide-react";
 
 const categories = [
   { title: "Pintos", text: "Broilers, SASSO, poedeiras e outros lotes.", tag: "01" },
@@ -16,9 +16,7 @@ const lots = [
 export default function Home() {
   return (
     <>
-      <header className="top">
-        <div className="notice"><span>PINTOEXPRESS</span><b>Produtos para avicultura em Moçambique</b><span>Atendimento comercial</span></div>
-        <nav className="container nav">
+      <header className="top"><nav className="container nav">
           <a className="brand" href="#"><span className="brand-mark">P</span><span className="brand-name">Pinto<strong>Express</strong></span><small>AVICULTURA · MOÇAMBIQUE</small></a>
           <div className="navlinks">
             <a href="#comprar">Produtos</a>
@@ -48,38 +46,14 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="quickbar">
-          <div className="container quickbar-inner">
-            <div><strong>01</strong><span>Escolha o produto</span></div>
-            <div><strong>02</strong><span>Escolha a quantidade</span></div>
-            <div><strong>03</strong><span>Confirme a reserva</span></div>
-            <div><strong>04</strong><span>Receba a confirmação</span></div>
-          </div>
-        </section>
+        <section className="counter"><div className="container counter-inner"><div className="counter-intro"><span className="counter-kicker">BALCÃO PINTOEXPRESS</span><h2>O que procura hoje?</h2><p>Comece pelo produto ou diga-nos o que pretende criar.</p></div><div className="counter-search"><Search size={18}/><span>Procure pintos, ração, equipamentos...</span><b>Pesquisar</b></div><a className="counter-whatsapp" href="#contacto"><MessageCircle size={17}/><span><strong>Comprar pelo WhatsApp</strong><small>Atendimento comercial</small></span><ArrowRight size={16}/></a></div></section>
 
-        <section id="comprar" className="container section">
-          <div className="section-heading">
-            <div><span className="eyebrow">Produtos</span><h2>O nosso balcão avícola</h2><p>Os principais produtos para começar, crescer e cuidar da sua criação.</p></div>
-            <a className="section-link" href="#contacto">Precisa de orientação? <ArrowRight size={15}/></a>
-          </div>
-          <div className="category-grid">
-            {categories.map((item) => (
-              <a className="category-card" href="#lotes" key={item.title}>
-                <div className="category-top"><span>{item.tag}</span><ArrowRight size={17}/></div>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <b>Ver produtos</b>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section id="lotes" className="container section">
+        <section id="comprar" className="container section catalog-section"><div className="section-heading"><div><span className="eyebrow">Catálogo</span><h2>Entre no nosso balcão</h2><p>Escolha uma categoria para encontrar o que precisa.</p></div><a className="section-link" href="#contacto">Precisa de orientação? <ArrowRight size={15}/></a></div><div className="category-grid">{categories.map((item)=><a className="category-card" href="#lotes" key={item.title}><div className="category-image"><span>{item.tag}</span><div className="category-arrow"><ArrowRight size={17}/></div></div><div className="category-copy"><h3>{item.title}</h3><p>{item.text}</p><b>Entrar no balcão</b></div></a>)}</div></section><section id="lotes" className="container section">
           <div className="section-heading">
             <div><span className="eyebrow">Disponibilidade</span><h2>Próximos lotes de pintos</h2><p>Reserve antecipadamente para garantir a quantidade que precisa.</p></div>
             <a className="section-link" href="#contacto">Falar sobre um lote <ArrowRight size={15}/></a>
           </div>
-          <div className="lot-grid">
+          <div className="lot-counter"><div className="lot-counter-title"><ShoppingBasket size={19}/><span><strong>Feira de pintos</strong><small>Próximas datas de disponibilidade</small></span></div><div className="lot-filter"><span>Todos</span><span>Corte</span><span>Rústicos</span><span>Postura</span></div></div><div className="lot-grid">
             {lots.map((lot, index) => (
               <article className={index === 0 ? "lot-card featured" : "lot-card"} key={lot.breed}>
                 <div className="lot-card-head"><span className="lot-status">{lot.status}</span><span className="lot-code">LOTE 0{index + 1}</span></div>
@@ -93,10 +67,10 @@ export default function Home() {
         <section id="kits" className="container section">
           <div className="kit-panel">
             <div className="kit-copy">
-              <span className="eyebrow">Planeie a sua criação</span>
-              <h2>Vai criar 50, 100, 500<br/>ou 1.000 aves?</h2>
-              <p>Diga-nos o número de aves e a finalidade da criação. A nossa equipa pode ajudar a definir pintos, ração e os produtos necessários para começar.</p>
-              <a className="btn forest" href="#contacto">Montar a minha criação <ArrowRight size={17}/></a>
+              <span className="eyebrow">Balcão de orientação</span>
+              <h2>Já sabe quantas aves quer criar?</h2>
+              <p>Escolha a dimensão da criação. Nós ajudamos a montar o pedido com pintos, ração e os produtos necessários.</p>
+              <a className="btn forest" href="#contacto">Montar o meu pedido <ArrowRight size={17}/></a>
             </div>
             <div className="kit-options">
               {["50", "100", "500", "1.000"].map((n, i) => <div className={i === 1 ? "kit-option selected" : "kit-option"} key={n}><b>{n}</b><span>aves</span></div>)}
@@ -109,8 +83,8 @@ export default function Home() {
             <div className="company-photo"/>
             <div className="company-copy">
               <span className="eyebrow">PintoExpress</span>
-              <h2>Uma casa avícola em que pode confiar.</h2>
-              <p>Somos um balcão comercial pensado para quem cria aves em Moçambique. A tecnologia torna a encomenda mais simples, mas o nosso atendimento continua próximo e humano.</p>
+              <h2>Um balcão digital, com atendimento de verdade.</h2>
+              <p>O PintoExpress aproxima o comércio avícola de quem cria. Pode começar no site, continuar no WhatsApp ou falar directamente com a nossa equipa.</p>
               <div className="trust-list">
                 <div><ShieldCheck size={19}/><span><strong>Empresa identificada</strong><small>Presença e atendimento comercial em Moçambique.</small></span></div>
                 <div><Wheat size={19}/><span><strong>Produtos para toda a criação</strong><small>Pintos, alimentação, saúde e equipamentos.</small></span></div>
