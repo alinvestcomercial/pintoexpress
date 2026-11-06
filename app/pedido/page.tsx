@@ -5,7 +5,7 @@ import {ArrowRight,Minus,Plus,Trash2,ShoppingBasket,MessageCircle,Send,CheckCirc
 import {SiteFrame} from "../components/SiteChrome";
 import {useCart} from "../components/CartProvider";
 const whatsapp=process.env.NEXT_PUBLIC_WHATSAPP_NUMBER||"";
-const packageNames:Record<string,string>={"broiler-100-iniciante":"Primeiro Lote Broiler — 100 aves","broiler-500-experiente":"Lote Broiler 500 — 500 aves","poedeira-50-iniciante":"Primeiro Lote de Poedeiras — 50 aves","poedeira-200-experiente":"Lote de Postura 200 — 200 aves","sasso-50-iniciante":"Primeiro Lote SASSO — 50 aves","sasso-200-experiente":"Lote SASSO 200 — 200 aves"};
+const packageNames:Record<string,string>={"ross-50-iniciante":"Primeiro Lote Ross — 50 aves","cobb-100-iniciante":"Lote Cobb 100 — 100 aves","ross-200-iniciante":"Lote Ross 200 — 200 aves","cobb-500-experiente":"Lote Cobb 500 — 500 aves","ross-1000-experiente":"Lote Ross 1.000 — 1.000 aves"};
 export default function PedidoPage(){
  const {items,setQty,remove,clear}=useCart();
  const [name,setName]=useState("");const [phone,setPhone]=useState("");const [location,setLocation]=useState("");const [delivery,setDelivery]=useState("A combinar");const [notes,setNotes]=useState("");const [size,setSize]=useState("100");const [feedback,setFeedback]=useState("");
