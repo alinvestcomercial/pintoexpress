@@ -20,7 +20,11 @@ const areas = [
 const lots = [["Broiler","Pinto de corte","14 Nov","2.500","55 MT"],["SASSO","Pinto rústico","21 Nov","1.200","65 MT"],["Poedeira","Pinto para postura","28 Nov","800","70 MT"]];
 
 export default function Home() {
-  const [active,setActive] = useState(0);\n  const [searchText,setSearchText] = useState("");\n  const [appliedSearch,setAppliedSearch] = useState("");\n  const filteredAreas = useMemo(() => areas.filter(([,title,description]) => (title+" "+description).toLocaleLowerCase().includes(appliedSearch.toLocaleLowerCase())), [appliedSearch]);\n  const runSearch = () => { setAppliedSearch(searchText.trim()); document.getElementById("explorar")?.scrollIntoView({behavior:"smooth"}); };
+  const [active,setActive] = useState(0);
+  const [searchText,setSearchText] = useState("");
+  const [appliedSearch,setAppliedSearch] = useState("");
+  const filteredAreas = useMemo(() => areas.filter(([,title,description]) => (title+" "+description).toLocaleLowerCase().includes(appliedSearch.toLocaleLowerCase())), [appliedSearch]);
+  const runSearch = () => { setAppliedSearch(searchText.trim()); document.getElementById("explorar")?.scrollIntoView({behavior:"smooth"}); };
   useEffect(() => { const timer = window.setInterval(() => setActive(v => (v+1)%slides.length), 6500); return () => window.clearInterval(timer); }, []);
   const slide = slides[active];
   return <div className="site">
