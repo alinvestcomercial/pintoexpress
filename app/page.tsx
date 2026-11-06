@@ -14,7 +14,7 @@ const areas = [
   ["02", "Rações e alimentação", "Rações para arranque, crescimento, acabamento e postura.", "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80", "Explorar rações"],
   ["03", "Saúde avícola", "Vitaminas, suplementos e soluções para o maneio das aves.", "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=900&q=80", "Ver soluções"],
   ["04", "Equipamentos", "Comedouros, bebedouros, aquecimento e material de criação.", "https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&w=900&q=80", "Ver equipamentos"],
-  ["05", "Kits de criação", "Soluções organizadas para quem vai começar ou aumentar a produção.", "https://images.unsplash.com/photo-1499529112087-3cb3b73ads?auto=format&fit=crop&w=900&q=80", "Conhecer kits"],
+  ["05", "Kits de criação", "Soluções organizadas para quem vai começar ou aumentar a produção.", "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=900&q=80", "Conhecer kits"],
   ["06", "Entregas e levantamento", "Combine a forma mais conveniente de receber a sua encomenda.", "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80", "Consultar entregas"]
 ];
 const lots = [["Broiler","Pinto de corte","14 Nov","2.500","55 MT"],["SASSO","Pinto rústico","21 Nov","1.200","65 MT"],["Poedeira","Pinto para postura","28 Nov","800","70 MT"]];
