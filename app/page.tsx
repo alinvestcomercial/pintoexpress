@@ -1,114 +1,79 @@
-import { ArrowRight, CalendarDays, CheckCircle2, MessageCircle, Phone, Search, ShoppingBasket, ShieldCheck, Truck, Wheat } from "lucide-react";
+import { ArrowRight, CalendarDays, CheckCircle2, MessageCircle, Search, ShoppingBasket, ShieldCheck, Truck, Wheat } from "lucide-react";
 
 const categories = [
-  { title: "Pintos", text: "Broilers, SASSO, poedeiras e outros lotes.", tag: "01" },
-  { title: "Rações", text: "Alimentação adequada para cada fase.", tag: "02" },
-  { title: "Saúde avícola", text: "Vitaminas, suplementos e produtos de manejo.", tag: "03" },
-  { title: "Equipamentos", text: "Comedouros, bebedouros e material de criação.", tag: "04" },
+  ["Pintos", "Broilers, SASSO, poedeiras e outros lotes.", "01"],
+  ["Rações", "Alimentação adequada para cada fase.", "02"],
+  ["Saúde avícola", "Vitaminas, suplementos e produtos de manejo.", "03"],
+  ["Equipamentos", "Comedouros, bebedouros e material de criação.", "04"],
 ];
 
 const lots = [
-  { breed: "Broiler", label: "Pinto de corte", date: "14 Nov", available: "2.500", price: "55 MT", status: "Reserva aberta" },
-  { breed: "SASSO", label: "Pinto rústico", date: "21 Nov", available: "1.200", price: "65 MT", status: "Novo lote" },
-  { breed: "Poedeira", label: "Pinto para postura", date: "28 Nov", available: "800", price: "70 MT", status: "Reserva aberta" },
+  ["Broiler", "Pinto de corte", "14 Nov", "2.500", "55 MT", "Reserva aberta"],
+  ["SASSO", "Pinto rústico", "21 Nov", "1.200", "65 MT", "Novo lote"],
+  ["Poedeira", "Pinto para postura", "28 Nov", "800", "70 MT", "Reserva aberta"],
 ];
 
 export default function Home() {
-  return (
-    <>
-      <header className="top"><nav className="container nav">
-          <a className="brand" href="#"><span className="brand-mark">P</span><span className="brand-name">Pinto<strong>Express</strong></span><small>AVICULTURA · MOÇAMBIQUE</small></a>
-          <div className="navlinks">
-            <a href="#comprar">Produtos</a>
-            <a href="#lotes">Pintos</a>
-            <a href="#kits">Kits de criação</a>
-            <a href="#empresa">Sobre nós</a>
-          </div>
-          <a className="whatsapp-mini" href="#contacto"><MessageCircle size={17}/> WhatsApp</a>
-        </nav>
-      </header>
+  return <div>
+    <header className="site-header">
+      <div className="container nav">
+        <a className="brand" href="#"><span className="brand-mark">P</span><span><strong>PintoExpress</strong><small>AVICULTURA · MOÇAMBIQUE</small></span></a>
+        <nav><a href="#catalogo">Produtos</a><a href="#pintos">Pintos</a><a href="#criar">Quero criar</a><a href="#empresa">A empresa</a></nav>
+        <a className="header-cta" href="#contacto"><MessageCircle size={16}/> WhatsApp</a>
+      </div>
+    </header>
 
-      <main>
-        <section className="hero">
-          <div className="hero-image"/>
-          <div className="hero-overlay"/>
-          <div className="container hero-content">
-            <div className="hero-copy">
-              <div className="hero-label"><span/> BALCÃO AVÍCOLA</div>
-              <h1>O que precisa para<br/><mark>a sua criação.</mark></h1>
-              <p>Pintos, rações, saúde e equipamentos. Escolha o que precisa, reserve o seu lote e fale directamente com a nossa equipa.</p>
-              <div className="hero-actions">
-                <a className="btn maize" href="#lotes">Ver pintos disponíveis <ArrowRight size={17}/></a>
-                <a className="btn white-outline" href="#contacto"><MessageCircle size={17}/> Pedir pelo WhatsApp</a>
-              </div>
-              <div className="hero-proof"><span><CheckCircle2 size={15}/> Reserva por lote</span><span><CheckCircle2 size={15}/> Pagamento M-Pesa</span><span><CheckCircle2 size={15}/> Atendimento humano</span></div>
-            </div>
+    <main>
+      <section className="hero-counter">
+        <div className="container hero-inner">
+          <div className="hero-intro">
+            <span className="eyebrow light">BALCÃO AVÍCOLA DE MOÇAMBIQUE</span>
+            <h1>Encontre o que precisa<br/><span>para criar melhor.</span></h1>
+            <p>Pintos, rações, produtos de saúde e equipamentos. Pesquise, escolha e fale directamente com a nossa equipa.</p>
           </div>
-        </section>
-
-        <section className="counter"><div className="container counter-inner"><div className="counter-intro"><span className="counter-kicker">BALCÃO PINTOEXPRESS</span><h2>O que procura hoje?</h2><p>Comece pelo produto ou diga-nos o que pretende criar.</p></div><div className="counter-search"><Search size={18}/><span>Procure pintos, ração, equipamentos...</span><b>Pesquisar</b></div><a className="counter-whatsapp" href="#contacto"><MessageCircle size={17}/><span><strong>Comprar pelo WhatsApp</strong><small>Atendimento comercial</small></span><ArrowRight size={16}/></a></div></section>
-
-        <section id="comprar" className="container section catalog-section"><div className="section-heading"><div><span className="eyebrow">Catálogo</span><h2>Entre no nosso balcão</h2><p>Escolha uma categoria para encontrar o que precisa.</p></div><a className="section-link" href="#contacto">Precisa de orientação? <ArrowRight size={15}/></a></div><div className="category-grid">{categories.map((item)=><a className="category-card" href="#lotes" key={item.title}><div className="category-image"><span>{item.tag}</span><div className="category-arrow"><ArrowRight size={17}/></div></div><div className="category-copy"><h3>{item.title}</h3><p>{item.text}</p><b>Entrar no balcão</b></div></a>)}</div></section><section id="lotes" className="container section">
-          <div className="section-heading">
-            <div><span className="eyebrow">Disponibilidade</span><h2>Próximos lotes de pintos</h2><p>Reserve antecipadamente para garantir a quantidade que precisa.</p></div>
-            <a className="section-link" href="#contacto">Falar sobre um lote <ArrowRight size={15}/></a>
+          <div className="search-panel">
+            <div className="search-row"><Search size={20}/><span>Empresa, produto, raça ou necessidade...</span><button>Pesquisar</button></div>
+            <div className="search-links"><span>Procure por:</span><a href="#pintos">Pintos</a><a href="#catalogo">Rações</a><a href="#catalogo">Equipamentos</a><a href="#criar">Kits de criação</a></div>
           </div>
-          <div className="lot-counter"><div className="lot-counter-title"><ShoppingBasket size={19}/><span><strong>Feira de pintos</strong><small>Próximas datas de disponibilidade</small></span></div><div className="lot-filter"><span>Todos</span><span>Corte</span><span>Rústicos</span><span>Postura</span></div></div><div className="lot-grid">
-            {lots.map((lot, index) => (
-              <article className={index === 0 ? "lot-card featured" : "lot-card"} key={lot.breed}>
-                <div className="lot-card-head"><span className="lot-status">{lot.status}</span><span className="lot-code">LOTE 0{index + 1}</span></div>
-                <div className="lot-visual"><div className="chick-symbol">P</div><span>PINTOEXPRESS</span></div>
-                <div className="lot-body"><small>{lot.label}</small><h3>{lot.breed}</h3><div className="lot-details"><span><CalendarDays size={15}/>{lot.date}</span><span><strong>{lot.available}</strong> disponíveis</span></div><div className="lot-bottom"><div><b>{lot.price}</b><small>por unidade</small></div><a href="#contacto">Reservar <ArrowRight size={15}/></a></div></div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="kits" className="container section">
-          <div className="kit-panel">
-            <div className="kit-copy">
-              <span className="eyebrow">Balcão de orientação</span>
-              <h2>Já sabe quantas aves quer criar?</h2>
-              <p>Escolha a dimensão da criação. Nós ajudamos a montar o pedido com pintos, ração e os produtos necessários.</p>
-              <a className="btn forest" href="#contacto">Montar o meu pedido <ArrowRight size={17}/></a>
-            </div>
-            <div className="kit-options">
-              {["50", "100", "500", "1.000"].map((n, i) => <div className={i === 1 ? "kit-option selected" : "kit-option"} key={n}><b>{n}</b><span>aves</span></div>)}
-            </div>
-          </div>
-        </section>
-
-        <section id="empresa" className="container section">
-          <div className="company-panel">
-            <div className="company-photo"/>
-            <div className="company-copy">
-              <span className="eyebrow">PintoExpress</span>
-              <h2>Um balcão digital, com atendimento de verdade.</h2>
-              <p>O PintoExpress aproxima o comércio avícola de quem cria. Pode começar no site, continuar no WhatsApp ou falar directamente com a nossa equipa.</p>
-              <div className="trust-list">
-                <div><ShieldCheck size={19}/><span><strong>Empresa identificada</strong><small>Presença e atendimento comercial em Moçambique.</small></span></div>
-                <div><Wheat size={19}/><span><strong>Produtos para toda a criação</strong><small>Pintos, alimentação, saúde e equipamentos.</small></span></div>
-                <div><Truck size={19}/><span><strong>Levantamento ou entrega</strong><small>Condições combinadas conforme produto e destino.</small></span></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="contacto" className="container section last">
-          <div className="contact-card">
-            <div><span className="eyebrow maize-text">Atendimento</span><h2>Não sabe por onde começar?</h2><p>Diga-nos quantas aves pretende criar e para que finalidade. Orientamos o seu pedido.</p></div>
-            <div className="contact-actions"><a className="btn maize" href="#"><MessageCircle size={18}/> Falar pelo WhatsApp</a><a className="phone-link" href="#"><Phone size={15}/> Atendimento comercial</a></div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="footer">
-        <div className="container footer-inner">
-          <a className="brand footer-brand" href="#"><span className="brand-mark">P</span><span className="brand-name">Pinto<strong>Express</strong></span><small>AVICULTURA · MOÇAMBIQUE</small></a>
-          <div className="footer-links"><a href="#comprar">Produtos</a><a href="#lotes">Lotes</a><a href="#empresa">Sobre nós</a><a href="#contacto">Contacto</a></div>
-          <p>© 2026 PintoExpress · Moçambique</p>
+          <div className="hero-trust"><span><CheckCircle2 size={15}/> Reserva por lote</span><span><CheckCircle2 size={15}/> M-Pesa</span><span><CheckCircle2 size={15}/> Atendimento humano</span></div>
         </div>
-      </footer>
-    </>
-  );
+      </section>
+
+      <section className="counter-nav">
+        <div className="container counter-nav-inner">
+          <div><strong>PINTOEXPRESS</strong><span>O mercado avícola num só lugar.</span></div>
+          <div className="counter-tabs"><a className="active" href="#catalogo">Produtos</a><a href="#pintos">Lotes de pintos</a><a href="#criar">Soluções para criação</a></div>
+        </div>
+      </section>
+
+      <section id="catalogo" className="container section">
+        <div className="section-title"><div><span className="eyebrow">Explore o balcão</span><h2>O que procura?</h2><p>Escolha uma área para começar.</p></div><a href="#contacto">Ver todo o catálogo <ArrowRight size={15}/></a></div>
+        <div className="category-grid">{categories.map(([title,text,num])=><a className="category-card" href="#pintos" key={title}><div className="category-number">{num}</div><div><h3>{title}</h3><p>{text}</p></div><ArrowRight size={17}/></a>)}</div>
+      </section>
+
+      <section id="pintos" className="container section">
+        <div className="section-title"><div><span className="eyebrow">Disponibilidade</span><h2>Próximos lotes de pintos</h2><p>Veja as próximas datas e reserve a quantidade de que precisa.</p></div><a href="#contacto">Falar sobre um lote <ArrowRight size={15}/></a></div>
+        <div className="market-strip"><div><ShoppingBasket size={19}/><span><strong>Feira de pintos</strong><small>Próximas disponibilidades</small></span></div><div><span>Todos</span><span>Corte</span><span>Rústicos</span><span>Postura</span></div></div>
+        <div className="lot-grid">{lots.map(([breed,label,date,available,price,status],i)=><article className={i===0?"lot-card featured":"lot-card"} key={breed}>
+          <div className="lot-top"><span>{status}</span><b>LOTE 0{i+1}</b></div><div className="lot-image"><span>P</span></div>
+          <div className="lot-content"><small>{label}</small><h3>{breed}</h3><div className="lot-meta"><span><CalendarDays size={15}/>{date}</span><span><strong>{available}</strong> disponíveis</span></div><div className="lot-footer"><strong>{price}<small>/ unidade</small></strong><a href="#contacto">Reservar <ArrowRight size={14}/></a></div></div>
+        </article>)}</div>
+      </section>
+
+      <section id="criar" className="container section">
+        <div className="create-panel">
+          <div><span className="eyebrow">Soluções para criação</span><h2>Não sabe exactamente o que comprar?</h2><p>Diga-nos quantas aves pretende criar e para que finalidade. O balcão ajuda a montar a sua compra.</p><a className="primary-btn" href="#contacto">Montar a minha criação <ArrowRight size={16}/></a></div>
+          <div className="create-options"><span>Quero criar</span>{["50 aves","100 aves","500 aves","1.000 aves"].map((n,i)=><a className={i===1?"selected":""} href="#contacto" key={n}><strong>{n.split(" ")[0]}</strong><small>aves</small></a>)}</div>
+        </div>
+      </section>
+
+      <section id="empresa" className="container section">
+        <div className="business-section"><div><span className="eyebrow">A nossa casa</span><h2>Um comércio avícola com presença digital.</h2><p>O PintoExpress junta a proximidade de um balcão comercial com a conveniência de poder pesquisar e reservar online.</p><div className="business-points"><span><ShieldCheck size={17}/><b>Compra identificada</b></span><span><Wheat size={17}/><b>Produtos para a criação</b></span><span><Truck size={17}/><b>Levantamento ou entrega</b></span></div></div><div className="business-side"><strong>Precisa de ajuda?</strong><span>Fale com a nossa equipa.</span><a href="#contacto">Ir para atendimento <ArrowRight size={15}/></a></div></div>
+      </section>
+
+      <section id="contacto" className="container section last"><div className="contact-card"><div><span className="eyebrow light">ATENDIMENTO</span><h2>Comece aqui.</h2><p>Envie o que procura pelo WhatsApp e a nossa equipa continua o atendimento consigo.</p></div><a className="primary-btn" href="#"><MessageCircle size={17}/> Falar pelo WhatsApp</a></div></section>
+    </main>
+
+    <footer><div className="container footer-inner"><a className="brand" href="#"><span className="brand-mark">P</span><span><strong>PintoExpress</strong><small>AVICULTURA · MOÇAMBIQUE</small></span></a><div><a href="#catalogo">Produtos</a><a href="#pintos">Pintos</a><a href="#empresa">A empresa</a><a href="#contacto">Contacto</a></div><small>© 2026 PintoExpress · Moçambique</small></div></footer>
+  </div>;
 }
