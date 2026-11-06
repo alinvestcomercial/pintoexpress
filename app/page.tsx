@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type { FormEvent } from "react";
 import {
   ArrowRight, CalendarDays, CheckCircle2, MapPin, Menu, MessageCircle,
   Search, ShoppingBasket, Truck, Wheat, X, Egg, HeartPulse, ClipboardList,
@@ -98,7 +99,7 @@ export default function Home() {
     "Pedido sujeito a confirmação de disponibilidade, preço e condições pela equipa."
   ].join("\n");
 
-  const submitRequest = async (event:React.FormEvent<HTMLFormElement>) => {
+  const submitRequest = async (event:FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!cart.length) { setFeedback("Adicione pelo menos um produto à sua consulta."); return; }
     const message = buildMessage();
