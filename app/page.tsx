@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, CalendarDays, CheckCircle2, MapPin, MessageCircle, Search, ShoppingBasket, Truck, Wheat } from "lucide-react";
 
 const slides = [
@@ -10,17 +10,17 @@ const slides = [
 ];
 
 const areas = [
-  ["01", "Pintos e lotes", "Broilers, SASSO, poedeiras e outros pintos disponíveis por lote."],
-  ["02", "Rações e alimentação", "Rações para arranque, crescimento, acabamento e postura."],
-  ["03", "Saúde avícola", "Vitaminas, suplementos e soluções para o maneio das aves."],
-  ["04", "Equipamentos", "Comedouros, bebedouros, aquecimento e material de criação."],
-  ["05", "Kits de criação", "Soluções organizadas para quem vai começar ou aumentar a produção."],
-  ["06", "Entregas e levantamento", "Combine a forma mais conveniente de receber a sua encomenda."]
+  ["01", "Pintos e lotes", "Broilers, SASSO, poedeiras e outros pintos disponíveis por lote.", "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=900&q=80", "Ver disponibilidade"],
+  ["02", "Rações e alimentação", "Rações para arranque, crescimento, acabamento e postura.", "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80", "Explorar rações"],
+  ["03", "Saúde avícola", "Vitaminas, suplementos e soluções para o maneio das aves.", "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=900&q=80", "Ver soluções"],
+  ["04", "Equipamentos", "Comedouros, bebedouros, aquecimento e material de criação.", "https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&w=900&q=80", "Ver equipamentos"],
+  ["05", "Kits de criação", "Soluções organizadas para quem vai começar ou aumentar a produção.", "https://images.unsplash.com/photo-1499529112087-3cb3b73ads?auto=format&fit=crop&w=900&q=80", "Conhecer kits"],
+  ["06", "Entregas e levantamento", "Combine a forma mais conveniente de receber a sua encomenda.", "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80", "Consultar entregas"]
 ];
 const lots = [["Broiler","Pinto de corte","14 Nov","2.500","55 MT"],["SASSO","Pinto rústico","21 Nov","1.200","65 MT"],["Poedeira","Pinto para postura","28 Nov","800","70 MT"]];
 
 export default function Home() {
-  const [active,setActive] = useState(0);
+  const [active,setActive] = useState(0);\n  const [searchText,setSearchText] = useState("");\n  const [appliedSearch,setAppliedSearch] = useState("");\n  const filteredAreas = useMemo(() => areas.filter(([,title,description]) => (title+" "+description).toLocaleLowerCase().includes(appliedSearch.toLocaleLowerCase())), [appliedSearch]);\n  const runSearch = () => { setAppliedSearch(searchText.trim()); document.getElementById("explorar")?.scrollIntoView({behavior:"smooth"}); };
   useEffect(() => { const timer = window.setInterval(() => setActive(v => (v+1)%slides.length), 6500); return () => window.clearInterval(timer); }, []);
   const slide = slides[active];
   return <div className="site">
@@ -51,14 +51,19 @@ export default function Home() {
       <section className="search-section">
         <div className="container search-inner">
           <div className="search-title"><span className="eyebrow">Encontre no nosso balcão</span><h2>O que procura hoje?</h2></div>
-          <div className="search-main"><Search size={21}/><input aria-label="Pesquisar produtos" placeholder="Pesquise por produto, raça, lote ou necessidade..."/><button>Pesquisar</button></div>
+          <div className="search-main"><Search size={21}/><input aria-label="Pesquisar produtos" value={searchText} onChange={e=>setSearchText(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")runSearch();}} placeholder="Pesquise por produto, raça, lote ou necessidade..."/><button onClick={runSearch}>Pesquisar</button></div>
           <div className="search-shortcuts"><span>Mais procurados:</span><a href="#pintos">Pintos de corte</a><a href="#explorar">Rações</a><a href="#explorar">Vitaminas</a><a href="#explorar">Comedouros e bebedouros</a><span className="search-location"><MapPin size={14}/> Moçambique</span></div>
         </div>
       </section>
 
       <section id="explorar" className="container section">
         <div className="section-heading"><div><span className="eyebrow">O mercado avícola</span><h2>Explore os nossos produtos e serviços</h2><p>Tudo o que precisa para iniciar, manter ou ampliar a sua produção.</p></div><a href="#contacto">Ver catálogo <ArrowRight size={16}/></a></div>
-        <div className="area-grid">{areas.map(([num,title,text])=><a className="area-card" href={title==="Pintos e lotes"?"#pintos":"#contacto"} key={title}><span className="area-num">{num}</span><div><h3>{title}</h3><p>{text}</p></div><ArrowRight size={17}/></a>)}</div>
+        {appliedSearch && <div className="search-result-note">Resultados para <strong>“{appliedSearch}”</strong> <button onClick={()=>{setAppliedSearch("");setSearchText("");}}>Limpar pesquisa</button></div>}
+        <div className="area-grid">{filteredAreas.map(([num,title,text,image,action])=><a className="area-card" href={title==="Pintos e lotes"?"#pintos":"#contacto"} key={title}>
+          <div className="area-image" style={{backgroundImage:"linear-gradient(180deg,rgba(8,39,25,.02),rgba(8,39,25,.56)),url("+image+")"}}><span className="area-num">{num}</span><span className="area-image-action">{action} <ArrowRight size={15}/></span></div>
+          <div className="area-card-copy"><h3>{title}</h3><p>{text}</p><span className="area-card-link">Explorar <ArrowRight size={15}/></span></div>
+        </a>)}</div>
+        {filteredAreas.length===0 && <div className="no-results">Não encontrámos uma categoria correspondente. Experimente “pintos”, “ração” ou “equipamentos”, ou fale connosco.</div>}
       </section>
 
       <section className="container section process-section"><div className="section-heading"><div><span className="eyebrow">Como funciona</span><h2>Comprar ficou mais simples.</h2></div></div><div className="process-grid">
