@@ -25,5 +25,20 @@ Website e WhatsApp são duas portas de entrada para o mesmo backend. O cliente n
 - Sem passwords para clientes
 - Alterações críticas exigem confirmação segura
 
-## Estado
-Fase inicial de implementação da fundação técnica e do modelo de domínio.
+
+## Estado da experiência comercial (frontend)
+- Balcão digital com pesquisa e filtros por categoria
+- Catálogo demonstrativo de pintos e insumos
+- Carrinho local para preparar pedidos de cotação
+- Formulário de contacto com dados de cliente, localização e preferência de recepção
+- Encaminhamento para WhatsApp quando `NEXT_PUBLIC_WHATSAPP_NUMBER` estiver configurado; sem essa variável, copia o texto do pedido
+- Layout responsivo com cards e superfícies arredondadas
+
+## Limitações actuais
+- Os produtos e imagens do catálogo são conteúdo inicial demonstrativo; preços e stock não são publicados nem confirmados.
+- O carrinho e os pedidos ainda não são persistidos numa base de dados nem criam encomendas oficiais.
+- Não há integração de pagamentos M-Pesa, facturação, logística ou WhatsApp Business API nesta fase.
+- A confirmação comercial continua a ser feita pela equipa. Nunca considerar o envio do formulário como encomenda confirmada ou pagamento efectuado.
+
+## Configuração de contacto
+Definir `NEXT_PUBLIC_WHATSAPP_NUMBER` com o número oficial em formato internacional, apenas dígitos (por exemplo, `2588XXXXXXXX`). Esta variável é pública e não deve conter tokens ou segredos.
