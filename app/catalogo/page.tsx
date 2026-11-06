@@ -108,9 +108,7 @@ function CatalogContent() {
 
       <div className="catalog-workspace">
         <aside className="catalog-sidebar">
-          <div className="catalog-sidebar-title"><SlidersHorizontal size={17}/><strong>Filtrar produtos</strong></div>
-          <span className="catalog-filter-label">Categorias</span>
-          <div className="catalog-sidebar-links">{categories.map(({name,icon:Icon})=><Link key={name} className={selectedCategory===name?"active":""} href={name==="Todos"?"/catalogo":"/catalogo?categoria="+encodeURIComponent(name)+(q?"&q="+encodeURIComponent(params.get("q")||""):"")}><Icon size={16}/><span>{name}</span><small>{counts[name]}</small></Link>)}</div>
+          <div className="catalog-sidebar-title"><ShoppingBasket size={17}/><strong>Apoio à compra</strong></div>
           <div className="catalog-sidebar-note"><span><Check size={15}/></span><div><strong>Compra com acompanhamento</strong><p>O pedido é uma consulta. Confirmamos consigo preço, stock e condições antes de qualquer encomenda.</p></div></div>
           <Link href="/kits" className="catalog-kits-link"><span className="catalog-kits-mark"><Package size={18}/></span><span><strong>Procura uma solução completa?</strong><small>Explore os kits de criação</small></span><ArrowRight size={16}/></Link>
         </aside>
