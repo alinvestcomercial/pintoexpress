@@ -51,7 +51,11 @@ Definir `NEXT_PUBLIC_WHATSAPP_NUMBER` com o número oficial em formato internaci
 - `/solucoes` — orientação por objectivo e dimensão da criação
 - `/como-comprar` — etapas e condições do processo de consulta
 - `/pedido` — lista de produtos e formulário de consulta
-- `/sobre` — apresentação institucional
+- `/encomendas-entregas` — balcão de acompanhamento e envio de comprovativos
 - `/contactos` — formulário e canais de atendimento
 
 O pedido é mantido localmente no navegador para permitir navegação entre catálogo, detalhes e formulário. Ainda não é uma encomenda persistida no servidor. O envio por WhatsApp depende da configuração de NEXT_PUBLIC_WHATSAPP_NUMBER; sem ela, o formulário informa a limitação e não confirma a recepção do pedido.
+
+
+## Estado de pagamentos e balcão digital
+A interface distingue o percurso pretendido para pagamentos M-Pesa online e encomendas de maior valor por transferência bancária. A integração transaccional ainda não está activa: não há preços reais por pacote, limite online aprovado, credenciais/API M-Pesa, persistência de encomendas nem armazenamento de comprovativos. Até esses componentes serem configurados, os formulários encaminham o pedido para atendimento e não geram referências nem confirmam pagamentos. O envio de comprovativos é actualmente preparado para WhatsApp; upload no site requer backend e armazenamento persistente (por exemplo, Supabase Storage ou Vercel Blob), com associação à encomenda.
