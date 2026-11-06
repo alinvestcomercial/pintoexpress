@@ -1,4 +1,4 @@
-import { ArrowRight, CalendarDays, CheckCircle2, MessageCircle, Phone, Search, ShieldCheck, Truck, Wheat } from "lucide-react";
+import { ArrowRight, CalendarDays, CheckCircle2, MessageCircle, Phone, Search, ShoppingBasket, ShieldCheck, Truck, Wheat } from "lucide-react";
 
 const categories = [
   { title: "Pintos", text: "Broilers, SASSO, poedeiras e outros lotes.", tag: "01" },
