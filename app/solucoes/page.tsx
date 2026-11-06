@@ -1,123 +1,47 @@
 import Link from "next/link";
-import {
-  ArrowRight, Check, ClipboardList, Package, Users, SlidersHorizontal,
-  Bird, Egg, Sprout, MessageCircle
-} from "lucide-react";
+import { ArrowRight, Check, Bird, Egg, Sprout, Package, UserRound, Gauge, ShoppingBasket, ClipboardCheck, MessageCircle } from "lucide-react";
 import { SiteFrame } from "../components/SiteChrome";
 
-const buyingModels = [
-  {
-    number: "01",
-    icon: Package,
-    tag: "Para começar",
-    title: "Kit de iniciação",
-    description: "Um conjunto orientado para quem está a preparar o arranque da sua criação e precisa de reunir os artigos essenciais.",
-    points: ["Produtos essenciais para o arranque", "Quantidades ajustadas à fase inicial", "Composição confirmada pela equipa"],
-    action: "Solicitar kit de iniciação",
-    href: "/pedido?modelo=kit-iniciacao",
-    featured: false,
-  },
-  {
-    number: "02",
-    icon: Users,
-    tag: "Por quantidade de aves",
-    title: "Kit por dimensão",
-    description: "Uma proposta organizada de acordo com a dimensão da criação que pretende desenvolver.",
-    points: ["Dimensionamento pelo número de aves", "Combinação de produtos e consumíveis", "Proposta comercial sob consulta"],
-    action: "Dimensionar o meu kit",
-    href: "/pedido?modelo=kit-dimensao",
-    featured: true,
-  },
-  {
-    number: "03",
-    icon: SlidersHorizontal,
-    tag: "À medida do projecto",
-    title: "Kit personalizado",
-    description: "Uma solução construída a partir do seu objectivo, sistema de criação, instalações e necessidades específicas.",
-    points: ["Selecção orientada ao seu sistema", "Possibilidade de incluir equipamentos", "Acompanhamento individual"],
-    action: "Personalizar o meu kit",
-    href: "/pedido?modelo=kit-personalizado",
-    featured: false,
-  },
+const packages = [
+  { id:"broiler-100-iniciante", species:"Frango de corte", bird:"Broiler", icon:Bird, lot:"100 aves", stage:"Iniciante", title:"Primeiro Lote Broiler", description:"Para começar com um lote gerível e organizar os essenciais desde a chegada dos pintos.", includes:["Pintos de corte","Ração de iniciação e crescimento","Comedouros e bebedouros","Orientação inicial de maneio"], level:"Começar com estrutura", featured:true },
+  { id:"broiler-500-experiente", species:"Frango de corte", bird:"Broiler", icon:Bird, lot:"500 aves", stage:"Experiente", title:"Lote Broiler 500", description:"Uma opção para produtores com instalação e rotina de maneio já preparadas.", includes:["Pintos de corte","Plano de alimentação por fase","Equipamento dimensionado ao lote","Reforço de consumíveis conforme necessidade"], level:"Escalar a produção" },
+  { id:"poedeira-50-iniciante", species:"Poedeiras", bird:"Postura", icon:Egg, lot:"50 aves", stage:"Iniciante", title:"Primeiro Lote de Poedeiras", description:"Para iniciar um pequeno projecto de produção de ovos com os artigos essenciais organizados.", includes:["Pintos de poedeira","Alimentação adequada à fase","Comedouros e bebedouros","Orientação para preparação da instalação"], level:"Começar a produzir" },
+  { id:"poedeira-200-experiente", species:"Poedeiras", bird:"Postura", icon:Egg, lot:"200 aves", stage:"Experiente", title:"Lote de Postura 200", description:"Para quem já conhece a rotina de criação e pretende estruturar um lote de maior dimensão.", includes:["Pintos de poedeira","Plano de alimentação por fase","Equipamento para o lote","Consumíveis complementares"], level:"Aumentar capacidade" },
+  { id:"sasso-50-iniciante", species:"Aves rústicas", bird:"SASSO", icon:Sprout, lot:"50 aves", stage:"Iniciante", title:"Primeiro Lote SASSO", description:"Uma entrada acompanhada para criação de aves rústicas em sistema diversificado.", includes:["Pintos SASSO","Alimentação adequada ao sistema","Comedouros e bebedouros","Orientação para o maneio inicial"], level:"Explorar criação rústica" },
+  { id:"sasso-200-experiente", species:"Aves rústicas", bird:"SASSO", icon:Sprout, lot:"200 aves", stage:"Experiente", title:"Lote SASSO 200", description:"Pacote de referência para produtores com experiência que pretendem ampliar o efectivo.", includes:["Pintos SASSO","Alimentação por fase","Equipamento para o lote","Consumíveis conforme o sistema"], level:"Ampliar o efectivo" },
 ];
 
-const steps = [
-  { number: "1", title: "Escolha o modelo", text: "Seleccione o tipo de pacote que melhor corresponde à sua necessidade." },
-  { number: "2", title: "Indique os detalhes", text: "Partilhe o número de aves, fase de criação, localização e outros requisitos." },
-  { number: "3", title: "Receba a proposta", text: "A equipa confirma a composição, disponibilidade, preço e condições antes da compra." },
+const buyingSteps = [
+ {n:"01",title:"Escolha o lote",text:"Seleccione a espécie, a quantidade de aves e o nível de acompanhamento adequado."},
+ {n:"02",title:"Personalize a consulta",text:"Indique a localidade, a data pretendida e as condições da sua instalação."},
+ {n:"03",title:"Receba a proposta",text:"Confirmamos disponibilidade, composição, quantidades, preço e entrega antes de fechar a compra."}
 ];
 
-const productionTypes = [
-  { icon: Bird, title: "Frangos de corte", text: "Pacotes orientados à produção de carne.", href: "/catalogo?q=broiler" },
-  { icon: Egg, title: "Poedeiras", text: "Pacotes para projectos de produção de ovos.", href: "/catalogo?q=poedeira" },
-  { icon: Sprout, title: "Aves rústicas", text: "Opções para sistemas de criação diversificados.", href: "/catalogo?q=SASSO" },
-];
-
-export default function Solucoes() {
-  return (
-    <SiteFrame>
-      <section className="solutions-hero">
-        <div className="container solutions-hero-inner">
-          <div className="solutions-hero-copy">
-            <div className="solutions-breadcrumb"><Link href="/">Início</Link><span>/</span><span>Soluções</span></div>
-            <span className="eyebrow light">MODELOS DE COMPRA · PINTOEXPRESS</span>
-            <h1>Uma criação, um pacote pensado para si.</h1>
-            <p>Escolha como prefere organizar a sua compra: comece com um kit de iniciação, dimensione o pacote pelo número de aves ou construa uma solução à medida do seu projecto.</p>
-            <div className="solutions-hero-actions">
-              <a className="solutions-primary" href="#modelos-compra">Conhecer os pacotes <ArrowRight size={16}/></a>
-              <Link className="solutions-secondary" href="/catalogo">Comprar produtos individualmente</Link>
-            </div>
-          </div>
-          <div className="solutions-hero-aside" aria-label="Vantagens dos pacotes">
-            <span className="solutions-aside-icon"><Package size={23}/></span>
-            <strong>Mais simples de organizar</strong>
-            <p>Em vez de escolher cada artigo separadamente, reúna as necessidades num único pedido.</p>
-            <div><span><Check size={14}/> Produtos agrupados</span><span><Check size={14}/> Quantidades ajustáveis</span><span><Check size={14}/> Proposta confirmada pela equipa</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="container solutions-main" id="modelos-compra">
-        <div className="solutions-section-heading">
-          <div><span className="eyebrow">Escolha o seu modelo</span><h2>Três formas de comprar por pacote.</h2><p>Todos os pacotes são preparados ou confirmados de acordo com as características da sua criação.</p></div>
-          <Link href="/kits">Ver detalhes dos kits <ArrowRight size={15}/></Link>
-        </div>
-
-        <div className="solutions-package-grid">
-          {buyingModels.map(({number, icon: Icon, tag, title, description, points, action, href, featured}) => (
-            <article className={featured ? "solutions-package-card featured" : "solutions-package-card"} key={number}>
-              <div className="solutions-package-top"><span className="solutions-package-icon"><Icon size={23}/></span><span className="solutions-package-number">{number}</span></div>
-              <span className="solutions-package-tag">{tag}</span>
-              <h3>{title}</h3>
-              <p>{description}</p>
-              <div className="solutions-package-points"><strong>O que inclui o modelo</strong>{points.map(item => <span key={item}><Check size={14}/>{item}</span>)}</div>
-              <Link href={href} className="solutions-package-link">{action}<ArrowRight size={16}/></Link>
-            </article>
-          ))}
-        </div>
-
-        <div className="solutions-package-note"><span><ClipboardList size={20}/></span><div><strong>Uma nota importante sobre os pacotes</strong><p>Os modelos apresentados são pontos de partida para uma consulta. A composição final, os preços, o stock e a disponibilidade de cada artigo são confirmados pela equipa antes de qualquer compra.</p></div></div>
-
-        <section className="solutions-how">
-          <div className="solutions-how-heading"><span className="eyebrow">Como funciona</span><h2>Do modelo escolhido à proposta.</h2><p>Não precisa de conhecer todos os detalhes técnicos para preparar o seu pedido.</p></div>
-          <div className="solutions-steps">
-            {steps.map(step => <article key={step.number}><span>{step.number}</span><div><strong>{step.title}</strong><p>{step.text}</p></div></article>)}
-          </div>
-        </section>
-
-        <section className="solutions-production">
-          <div className="solutions-production-heading"><span className="eyebrow">Também pode indicar o objectivo</span><h2>Que tipo de criação está a preparar?</h2></div>
-          <div className="solutions-production-grid">
-            {productionTypes.map(({icon: Icon, title, text, href}) => <Link href={href} className="solutions-production-item" key={title}><Icon size={21}/><span><strong>{title}</strong><small>{text}</small></span><ArrowRight size={16}/></Link>)}
-          </div>
-        </section>
-
-        <section className="solutions-contact-cta">
-          <div className="solutions-cta-icon"><MessageCircle size={22}/></div>
-          <div><span className="eyebrow light">PRECISA DE ACOMPANHAMENTO?</span><h2>Vamos preparar o pacote adequado à sua criação.</h2><p>Partilhe o seu objectivo, a quantidade aproximada de aves e a sua localidade. A equipa ajuda a estruturar o pedido e confirma as opções disponíveis.</p></div>
-          <Link href="/contactos">Falar com a equipa <ArrowRight size={16}/></Link>
-        </section>
-      </section>
-    </SiteFrame>
-  );
+export default function Solucoes(){
+ return <SiteFrame>
+  <section className="solutions-hero"><div className="container solutions-hero-inner">
+   <div className="solutions-hero-copy"><div className="solutions-breadcrumb"><Link href="/">Início</Link><span>/</span><span>Soluções</span></div>
+    <span className="eyebrow light">PACOTES DE CRIAÇÃO · PINTOEXPRESS</span>
+    <h1>Escolha o seu lote. Nós ajudamos a preparar o resto.</h1>
+    <p>Pacotes organizados por espécie, quantidade de aves e experiência do produtor. Escolha uma opção de referência e peça uma proposta ajustada à sua realidade.</p>
+    <div className="solutions-hero-actions"><a className="solutions-primary" href="#pacotes">Escolher um pacote <ArrowRight size={16}/></a><Link className="solutions-secondary" href="/catalogo">Ver produtos individuais</Link></div>
+   </div>
+   <aside className="solutions-hero-aside"><span className="solutions-aside-icon"><Package size={23}/></span><strong>Uma compra mais simples</strong><p>Em vez de começar do zero, escolha um lote com os produtos essenciais organizados por necessidade.</p><div><span><Check size={14}/> Por espécie e dimensão</span><span><Check size={14}/> Para iniciar ou expandir</span><span><Check size={14}/> Proposta confirmada consigo</span></div></aside>
+  </div></section>
+  <section className="container solutions-main" id="pacotes">
+   <div className="solutions-section-heading"><div><span className="eyebrow">Escolha pelo seu projecto</span><h2>Pacotes de criação</h2><p>Comece por uma opção de referência. A composição final é ajustada à sua instalação e ao calendário de fornecimento.</p></div></div>
+   <div className="solutions-package-grid">
+    {packages.map(({id,species,bird,icon:Icon,lot,stage,title,description,includes,level,featured})=><article className={featured?"solutions-package-card featured":"solutions-package-card"} key={id}>
+     <div className="solutions-package-top"><span className="solutions-package-icon"><Icon size={23}/></span><span className="solutions-package-number">{lot}</span></div>
+     <div className="solutions-package-tags"><span>{species}</span><span>{stage}</span></div>
+     <h3>{title}</h3><p>{description}</p>
+     <div className="solutions-package-points"><strong>O pacote contempla</strong>{includes.map(item=><span key={item}><Check size={14}/>{item}</span>)}</div>
+     <div className="solutions-package-foot"><small>{level}</small><Link href={"/pedido?modelo=pacote&pacote="+encodeURIComponent(id)+"&especie="+encodeURIComponent(bird)+"&lote="+encodeURIComponent(lot)+"&experiencia="+encodeURIComponent(stage)}>Escolher este pacote <ArrowRight size={16}/></Link></div>
+    </article>)}
+   </div>
+   <div className="solutions-package-note"><span><ClipboardCheck size={20}/></span><div><strong>Pacotes de referência, preparados à sua medida</strong><p>As quantidades apresentadas são opções iniciais para facilitar a escolha, não representam um histórico confirmado de vendas nem garantem stock. A equipa confirma a disponibilidade dos pintos, composição, quantidades de ração e equipamentos, preço e condições antes da compra.</p></div></div>
+   <section className="solutions-how"><div className="solutions-how-heading"><span className="eyebrow">Da escolha à compra</span><h2>Três passos para avançar.</h2><p>Não precisa de dominar todos os detalhes técnicos para pedir uma proposta.</p></div><div className="solutions-steps">{buyingSteps.map(s=><article key={s.n}><span>{s.n}</span><div><strong>{s.title}</strong><p>{s.text}</p></div></article>)}</div></section>
+   <section className="solutions-contact-cta"><div className="solutions-cta-icon"><MessageCircle size={22}/></div><div><span className="eyebrow light">NÃO ENCONTROU O LOTE CERTO?</span><h2>Peça um pacote personalizado.</h2><p>Podemos ajustar a quantidade, a espécie e a composição dos artigos ao seu projecto e à capacidade da sua instalação.</p></div><Link href="/pedido?modelo=pacote-personalizado">Personalizar o meu pacote <ArrowRight size={16}/></Link></section>
+  </section>
+ </SiteFrame>
 }
