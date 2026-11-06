@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from "react";
 import {
-  ArrowRight, CalendarDays, CheckCircle2, ChevronDown, MapPin, Menu,
-  MessageCircle, Search, ShoppingBasket, Sprout, Truck, Wheat, X,
-  Egg, HeartPulse, PackageCheck, ClipboardList
+  ArrowRight, CalendarDays, CheckCircle2, MapPin, Menu,
+  MessageCircle, Search, ShoppingBasket, Truck, Wheat, X,
+  Egg, HeartPulse, ClipboardList
 } from "lucide-react";
 
 const categories = [
@@ -130,7 +130,7 @@ export default function Home() {
           <div className="trust-strip"><div className="trust-icon"><CheckCircle2 size={25}/></div><div><strong>Um balcão próximo, agora também digital.</strong><p>Descubra, consulte e organize as suas compras com atendimento humano, pagamento por M-Pesa e opção de levantamento ou entrega.</p></div><div className="trust-benefits"><span><Wheat size={17}/> Produtos avícolas</span><span><Truck size={17}/> Entrega ou levantamento</span><span><HeartPulse size={17}/> Apoio ao criador</span></div></div>
         </section>
 
-        <section id="contacto" className="container section last"><div className="contact-panel"><div><span className="eyebrow light">ATENDIMENTO PINTOEXPRESS</span><h2>Vamos encontrar o que precisa?</h2><p>Envie-nos a sua necessidade. A nossa equipa ajuda a confirmar produtos, lotes, quantidades e condições.</p></div><a className="primary-btn" href="https://wa.me/?text=Olá%20PintoExpress,%20preciso%20de%20informações%20sobre%20produtos%20avícolas."><MessageCircle size={17}/> Falar pelo WhatsApp</a></div></section>
+        <section id="contacto" className="container section last"><div className="contact-panel"><div><span className="eyebrow light">ATENDIMENTO PINTOEXPRESS</span><h2>Vamos encontrar o que precisa?</h2><p>Envie-nos a sua necessidade. A nossa equipa ajuda a confirmar produtos, lotes, quantidades e condições.</p></div><a className="primary-btn" href="#contacto"><MessageCircle size={17}/> Falar pelo WhatsApp</a></div></section>
       </main>
       <footer><div className="container footer-inner"><a className="brand" href="#"><span className="brand-mark">P</span><span><strong>PintoExpress</strong><small>AVICULTURA · MOÇAMBIQUE</small></span></a><div><a href="#categorias">Produtos</a><a href="#pintos">Lotes</a><a href="#como-funciona">Como comprar</a><a href="#contacto">Contactos</a></div><small>© 2026 PintoExpress · Moçambique</small></div></footer>
     </div>
