@@ -119,29 +119,58 @@ function CatalogContent() {
             <label className="catalog-page-size"><span>Por página</span><select value={pageSize} onChange={e=>setPageSize(Number(e.target.value))} aria-label="Produtos por página"><option value={12}>12</option><option value={24}>24</option><option value={48}>48</option></select></label>
           </div>
         </div>
-        {filtered.length ? <>
-          <div className="catalog-product-grid">
-            {visibleProducts.map(p=><article className="catalog-product-card" key={p.id}>
-              <Link href={"/produto/"+p.id} className="catalog-product-image" style={{backgroundImage:"url("+p.image+")"}} aria-label={"Ver detalhes de "+p.name}>
-                <span className="catalog-product-category">{p.category}</span>{p.tag && <span className="catalog-product-tag">{p.tag}</span>}
-              </Link>
-              <div className="catalog-product-body">
-                <div className="catalog-product-meta"><span>{p.category}</span><span className="catalog-consult-status"><i/> Sob consulta</span></div>
-                <Link href={"/produto/"+p.id} className="catalog-product-name">{p.name}</Link>
-                <p>{p.description}</p>
-                <div className="catalog-product-footer"><span className="catalog-price-note">Preço e stock <strong>sob consulta</strong></span><button className={addedId===p.id?"catalog-add-button is-added":"catalog-add-button"} onClick={()=>addProduct(p)}>{addedId===p.id?<><Check size={15}/> Adicionado</>:<><Plus size={15}/> Adicionar</>}</button></div>
-              </div>
-            </article>)}
-          </div>
-          {pageCount > 1 && <nav className="catalog-pagination" aria-label="Paginação do catálogo">
-            <span className="catalog-pagination-summary">A mostrar <strong>{(currentPage-1)*pageSize+1}–{Math.min(currentPage*pageSize,filtered.length)}</strong> de <strong>{filtered.length}</strong> produtos</span>
-            <div className="catalog-pagination-controls">
-              <button type="button" onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={currentPage===1} aria-label="Página anterior"><ChevronLeft size={17}/><span>Anterior</span></button>
-              {Array.from({length:pageCount},(_,i)=>i+1).filter(n=>n===1||n===pageCount||Math.abs(n-currentPage)<=1).map((n,i,arr)=><span className="catalog-page-number-wrap" key={n}>{i>0&&n-arr[i-1]>1?<span className="catalog-page-dots">…</span>:null}<button type="button" className={currentPage===n?"active":""} onClick={()=>setPage(n)} aria-label={"Página "+n} aria-current={currentPage===n?"page":undefined}>{n}</button></span>)}
-              <button type="button" onClick={()=>setPage(p=>Math.min(pageCount,p+1))} disabled={currentPage===pageCount} aria-label="Página seguinte"><span>Seguinte</span><ChevronRight size={17}/></button>
+        {filtered.length ? (
+          <>
+            <div className="catalog-product-grid">
+              {visibleProducts.map((p) => (
+                <article className="catalog-product-card" key={p.id}>
+                  <Link href={"/produto/" + p.id} className="catalog-product-image" style={{backgroundImage:"url(" + p.image + ")"}} aria-label={"Ver detalhes de " + p.name}>
+                    <span className="catalog-product-category">{p.category}</span>
+                    {p.tag && <span className="catalog-product-tag">{p.tag}</span>}
+                  </Link>
+                  <div className="catalog-product-body">
+                    <div className="catalog-product-meta">
+                      <span>{p.category}</span>
+                      <span className="catalog-consult-status"><i/> Sob consulta</span>
+                    </div>
+                    <Link href={"/produto/" + p.id} className="catalog-product-name">{p.name}</Link>
+                    <p>{p.description}</p>
+                    <div className="catalog-product-footer">
+                      <span className="catalog-price-note">Preço e stock <strong>sob consulta</strong></span>
+                      <button className={addedId===p.id ? "catalog-add-button is-added" : "catalog-add-button"} onClick={() => addProduct(p)}>
+                        {addedId===p.id ? <><Check size={15}/> Adicionado</> : <><Plus size={15}/> Adicionar</>}
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
-          </nav>}
-        </> : <div className="catalog-empty"><span><Search size={25}/></span><h3>Não encontrámos esse produto.</h3><p>Experimente outro termo ou explore uma categoria diferente.</p><Link href="/catalogo">Limpar filtros <ArrowRight size={15}/></Link></div>}
+            {pageCount > 1 && (
+              <nav className="catalog-pagination" aria-label="Paginação do catálogo">
+                <span className="catalog-pagination-summary">
+                  A mostrar <strong>{(currentPage-1)*pageSize+1}–{Math.min(currentPage*pageSize,filtered.length)}</strong> de <strong>{filtered.length}</strong> produtos
+                </span>
+                <div className="catalog-pagination-controls">
+                  <button type="button" onClick={() => setPage(p => Math.max(1,p-1))} disabled={currentPage===1} aria-label="Página anterior"><ChevronLeft size={17}/><span>Anterior</span></button>
+                  {Array.from({length:pageCount},(_,i)=>i+1).filter(n=>n===1||n===pageCount||Math.abs(n-currentPage)<=1).map((n,i,arr) => (
+                    <span className="catalog-page-number-wrap" key={n}>
+                      {i>0 && n-arr[i-1]>1 ? <span className="catalog-page-dots">…</span> : null}
+                      <button type="button" className={currentPage===n ? "active" : ""} onClick={() => setPage(n)} aria-label={"Página " + n} aria-current={currentPage===n ? "page" : undefined}>{n}</button>
+                    </span>
+                  ))}
+                  <button type="button" onClick={() => setPage(p => Math.min(pageCount,p+1))} disabled={currentPage===pageCount} aria-label="Página seguinte"><span>Seguinte</span><ChevronRight size={17}/></button>
+                </div>
+              </nav>
+            )}
+          </>
+        ) : (
+          <div className="catalog-empty">
+            <span><Search size={25}/></span>
+            <h3>Não encontrámos esse produto.</h3>
+            <p>Experimente outro termo ou explore uma categoria diferente.</p>
+            <Link href="/catalogo">Limpar filtros <ArrowRight size={15}/></Link>
+          </div>
+        )}
       </div>
     </section>
   </SiteFrame>;
