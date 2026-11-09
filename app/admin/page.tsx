@@ -57,11 +57,11 @@ export default async function Admin(){
       <section className="admin-workspace">
         <div className="admin-workspace-head"><div><span className="eyebrow">OPERAÇÃO DIÁRIA</span><h2>Escolha onde trabalhar</h2></div><span className="admin-status"><Activity size={14}/> Estrutura preparada</span></div>
         <div className="admin-workspace-grid">
-          <AdminModule icon={<ClipboardList/>} title="Encomendas" text="Consultar pedidos, referências e estados." status="Próxima fase"/>
-          <AdminModule icon={<Wallet/>} title="Pagamentos" text="Validar M-Pesa, transferências e comprovativos." status="Próxima fase"/>
-          <AdminModule icon={<Truck/>} title="Logística" text="Organizar entrega, levantamento e reservas." status="Próxima fase"/>
-          <AdminModule icon={<Users/>} title="Utilizadores" text="Gerir equipa, perfis e permissões." status="Disponível"/>
-          <AdminModule icon={<Settings/>} title="Configurações" text="Dados comerciais e parâmetros da plataforma." status="Próxima fase"/>
+          <AdminModule icon={<ClipboardList/>} title="Encomendas" description="Consultar pedidos, referências e estados." status="Próxima fase"/>
+          <AdminModule icon={<Wallet/>} title="Pagamentos" description="Validar M-Pesa, transferências e comprovativos." status="Próxima fase"/>
+          <AdminModule icon={<Truck/>} title="Logística" description="Organizar entrega, levantamento e reservas." status="Próxima fase"/>
+          <AdminModule icon={<Users/>} title="Utilizadores" description="Gerir equipa, perfis e permissões." status="Disponível"/>
+          <AdminModule icon={<Settings/>} title="Configurações" description="Dados comerciais e parâmetros da plataforma." status="Próxima fase"/>
         </div>
       </section>
 
