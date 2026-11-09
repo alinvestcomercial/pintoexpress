@@ -1,12 +1,7 @@
-import {NextResponse} from "next/server";
+import {NextRequest,NextResponse} from "next/server";
 import {cookies} from "next/headers";
-const url=process.env.NEXT_PUBLIC_SUPABASE_URL!,key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
-export async function GET(){
- const t=(await cookies()).get("pe_access_token")?.value;
- if(!t)return NextResponse.json({error:"Não autorizado."},{status:401});
- const p=await fetch(url+"/rest/v1/rpc/get_my_staff_profile",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+t,"Content-Type":"application/json"},body:"{}",cache:"no-store"});
- const pr=await p.json(); if(!p.ok||!pr?.[0]?.active)return NextResponse.json({error:"Não autorizado."},{status:403});
- const q=new URL(url+"/rest/v1/orders"); q.searchParams.set("select","id,reference,status,total_amount,currency,payment_method,payment_status,channel,created_at,updated_at,customer:customers(full_name,phone,whatsapp_phone)");
- q.searchParams.set("order","created_at.desc"); q.searchParams.set("limit","100");
- const r=await fetch(q,{headers:{apikey:key,Authorization:"Bearer "+t},cache:"no-store"}); return NextResponse.json({orders:await r.json()},{status:r.status});
-}
+const url=process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+async function staff(){const token=(await cookies()).get("pe_access_token")?.value;if(!token||!url||!key)return null;const r=await fetch(url+"/rest/v1/rpc/get_my_staff_profile",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:"{}",cache:"no-store"});if(!r.ok)return null;const rows=await r.json();if(!Array.isArray(rows)||!rows[0]?.active)return null;return {token,profile:rows[0]}}
+export async function GET(){const auth=await staff();if(!auth)return NextResponse.json({error:"Sessão interna inválida."},{status:401});const query=new URLSearchParams({select:"id,reference,status,total_amount,currency,payment_method,payment_status,channel,created_at,customer:customers(full_name,phone,whatsapp_phone)",order:"created_at.desc",limit:"200"});const r=await fetch(url+"/rest/v1/orders?"+query.toString(),{headers:{apikey:key,Authorization:"Bearer "+auth.token},cache:"no-store"});const data=await r.json();return NextResponse.json(r.ok?{orders:data}:{error:"Não foi possível consultar as encomendas."},{status:r.ok?200:502})}
+export async function PATCH(req:NextRequest){const auth=await staff();if(!auth)return NextResponse.json({error:"Sessão interna inválida."},{status:401});const body=await req.json();const id=String(body.id||""),status=String(body.status||""),message=String(body.message||"").slice(0,500);if(!id||!status)return NextResponse.json({error:"Indique a encomenda e o novo estado."},{status:400});const allowed=["draft","pending_payment","payment_submitted","paid","confirmed","preparing","ready","out_for_delivery","ready_for_pickup","completed","cancelled"];if(!allowed.includes(status))return NextResponse.json({error:"Estado inválido."},{status:400});const r=await fetch(url+"/rest/v1/rpc/staff_update_order_status",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+auth.token,"Content-Type":"application/json"},body:JSON.stringify({p_order_id:id,p_status:status,p_message:message||null}),cache:"no-store"});const data=await r.json();if(!r.ok)return NextResponse.json({error:data.message||data.details||"Não foi possível actualizar o estado."},{status:r.status===403?403:400});return NextResponse.json({order:data})}
