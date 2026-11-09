@@ -75,6 +75,6 @@ export default async function Admin(){
   </main>;
 }
 
-function AdminModule({icon,title,text:description,status}:{icon:React.ReactNode;title:string;description:string;status:string}){
+function AdminModule({icon,title,description,status}:{icon:React.ReactNode;title:string;description:string;status:string}){
   return <article className="admin-module-card"><div className="admin-module-icon">{icon}</div><div><strong>{title}</strong><p>{description}</p></div><span>{status}</span></article>;
 }
