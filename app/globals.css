@@ -684,3 +684,5 @@ html{overflow-x:hidden}body{overflow-x:hidden}img,svg{max-width:100%}button,a,in
 .admin-subpage-nav>span[aria-current="page"]{color:var(--green-dark);font-weight:800}
 .admin-subpage-nav>svg{color:#aab5ac}
 @media(max-width:560px){.admin-subpage-nav{margin-bottom:17px;font-size:10px}}
+
+.admin-proof-link{display:inline-flex;align-items:center;gap:6px;margin-top:7px;color:var(--green);font-size:11px;font-weight:800}.admin-order-update button+button{margin-left:5px}.admin-order-state>span{display:inline-flex;align-items:center;gap:6px}
