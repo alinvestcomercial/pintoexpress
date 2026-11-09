@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-import {Activity,ArrowRight,ClipboardList,LogOut,MessageCircle,Package,Settings,ShieldCheck,Truck,Users,Wallet} from "lucide-react";
+import {Activity,ArrowRight,ClipboardList,LayoutDashboard,LogOut,MessageCircle,Package,Settings,ShieldCheck,Truck,Users,Wallet} from "lucide-react";
 import AdminNav from "./components/AdminNav";
 
 const roles=[
