@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
-import {ArrowRight,ClipboardList,ChevronDown,LayoutDashboard,LogOut,Menu as MenuIcon,MessageCircle,Settings,ShieldCheck,Truck,Users,Wallet} from "lucide-react";
-const links=[{href:"/admin",label:"Painel",icon:LayoutDashboard},{href:"/admin/encomendas",label:"Encomendas",icon:ClipboardList},{href:"/admin/pagamentos",label:"Pagamentos",icon:Wallet},{href:"/admin/logistica",label:"Logística",icon:Truck},{href:"/admin/utilizadores",label:"Utilizadores",icon:Users},{href:"/admin/configuracoes",label:"Configurações",icon:Settings},{href:"/admin/whatsapp",label:"Mensagens",icon:MessageCircle},{href:"/",label:"Site público",icon:ArrowRight}];
+import {ArrowRight,ClipboardList,ChevronDown,LayoutDashboard,LogOut,Menu as MenuIcon,MessageCircle,Settings,ShieldCheck,Truck,Users,Wallet,UserRound} from "lucide-react";
+const links=[{href:"/admin",label:"Painel",icon:LayoutDashboard},{href:"/admin/encomendas",label:"Encomendas",icon:ClipboardList},{href:"/admin/pagamentos",label:"Pagamentos",icon:Wallet},{href:"/admin/logistica",label:"Logística",icon:Truck},{href:"/admin/clientes",label:"Clientes",icon:UserRound},{href:"/admin/utilizadores",label:"Utilizadores",icon:Users},{href:"/admin/configuracoes",label:"Configurações",icon:Settings},{href:"/admin/whatsapp",label:"Mensagens",icon:MessageCircle},{href:"/",label:"Site público",icon:ArrowRight}];
 const labels:Record<string,string>={super_admin:"Super Admin",admin:"Administrador",manager:"Gestor",sales:"Vendas",finance:"Financeiro",logistics:"Logística",support:"Atendimento",viewer:"Consulta"};
 export default function AdminHeader({name,role}:{name:string;role:string}){
  const pathname=usePathname();
