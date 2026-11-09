@@ -70,7 +70,7 @@ export default async function Admin(){
         <div>{roles.map(r=><article key={r[0]}><strong>{r[1]}</strong><span>{r[2]}</span></article>)}</div>
       </section>
 
-      <footer className="admin-footer"><span>PintoExpress · Balcão interno</span><span>+258 84 255 3641</span></footer>
+      <footer className="admin-footer"><div><strong>PintoExpress</strong><span>Balcão interno · Operação da plataforma</span></div><nav aria-label="Links internos"><Link href="/admin">Painel</Link><Link href="/admin/whatsapp">Mensagens WhatsApp</Link><Link href="/">Site público</Link><a href="https://wa.me/258842553641">+258 84 255 3641</a></nav></footer>
     </section>
   </main>;
 }
