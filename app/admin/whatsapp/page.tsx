@@ -1,6 +1,7 @@
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 import AdminHeader from "../components/AdminHeader";
+import AdminSubpageNav from "../components/AdminSubpageNav";
 import WhatsAppTemplatesClient from "../components/WhatsAppTemplatesClient";
 export default async function WhatsAppTemplates(){
  const token=(await cookies()).get("pe_access_token")?.value;
@@ -9,5 +10,5 @@ export default async function WhatsAppTemplates(){
  const p=await fetch(url+"/rest/v1/rpc/get_my_staff_profile",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:"{}",cache:"no-store"});
  const rows=await p.json(); if(!p.ok||!Array.isArray(rows)||!rows[0]?.active) redirect("/admin/login");
  const profile=rows[0];
- return <main className="admin-shell"><AdminHeader name={profile.full_name||"Equipa"} role={profile.role||""}/><section className="admin-content"><WhatsAppTemplatesClient/></section></main>;
+ return <main className="admin-shell"><AdminHeader name={profile.full_name||"Equipa"} role={profile.role||""}/><section className="admin-content"><AdminSubpageNav title="Mensagens WhatsApp"/><WhatsAppTemplatesClient/></section></main>;
 }
