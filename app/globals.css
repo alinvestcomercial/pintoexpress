@@ -644,3 +644,24 @@ html{overflow-x:hidden}body{overflow-x:hidden}img,svg{max-width:100%}button,a,in
 @media(max-width:900px){.admin-role-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.admin-topbar{grid-template-columns:minmax(0,1fr) auto!important}.admin-user{gap:8px}}
 @media(max-width:680px){.admin-role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-brand small{display:none}.admin-user>div strong{max-width:125px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.admin-menu-dropdown summary{min-width:78px;padding:0 10px}}
 @media(max-width:420px){.admin-user{gap:6px}.admin-menu-dropdown summary{min-width:70px;height:38px;padding:0 8px}.admin-menu-dropdown summary svg:last-child{display:none}.admin-user button.admin-logout{min-width:64px;height:38px;padding:0 8px}}
+
+
+/* Perfis: texto introdutório em fluxo normal e largura integral */
+.admin-roles .admin-workspace-head{display:block;width:100%}
+.admin-roles .admin-workspace-head>div{display:block;width:100%;max-width:none}
+.admin-roles .admin-workspace-head>div>p{display:block;width:100%;max-width:none;margin:9px 0 0;font-size:13px;line-height:1.6;color:var(--muted);white-space:normal;overflow-wrap:normal;word-break:normal;text-wrap:initial}
+.admin-roles .admin-workspace-head>div>p br{display:none}
+
+/* Encomendas: composição legível e responsiva */
+.admin-order-row{grid-template-columns:minmax(0,1.4fr) minmax(130px,.8fr) minmax(180px,.9fr);align-items:center;gap:16px}
+.admin-order-main,.admin-order-state,.admin-order-total{display:flex;flex-direction:column;gap:6px;min-width:0}
+.admin-order-main>strong{font-size:13px;color:var(--green-dark)}
+.admin-order-main>span,.admin-order-main>small,.admin-order-state>small{font-size:10px;color:var(--muted)}
+.admin-order-total>strong{font-size:13px;color:var(--green-dark);text-align:right}
+.admin-order-update{display:flex;justify-content:flex-end;gap:6px}
+.admin-order-update select{min-width:0;max-width:190px;height:32px;padding:0 8px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--green-dark);font-size:10px}
+.admin-order-update button{width:32px;height:32px;display:grid;place-items:center;border:0;border-radius:7px;background:var(--green);color:#fff}
+.admin-order-update button:disabled{opacity:.35;cursor:not-allowed}
+.admin-order-state{align-items:flex-start}
+@media(max-width:760px){.admin-order-row{grid-template-columns:1fr 1fr;gap:12px}.admin-order-total{grid-column:1/-1;align-items:flex-start}.admin-order-total>strong{text-align:left}.admin-order-update{justify-content:flex-start}}
+@media(max-width:480px){.admin-order-row{grid-template-columns:1fr}.admin-order-total{grid-column:auto}.admin-order-update{width:100%}.admin-order-update select{flex:1;max-width:none}}
