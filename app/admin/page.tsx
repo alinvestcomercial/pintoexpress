@@ -1,3 +1,80 @@
-import Link from "next/link";import {cookies} from "next/headers";import {redirect} from "next/navigation";import {ShieldCheck,Users,ShoppingCart,Wallet,Truck,Settings} from "lucide-react";
-const roles=[["super_admin","Super Admin","Acesso total e gestão de utilizadores"],["admin","Administrador","Operações gerais e configurações"],["manager","Gestor","Gestão comercial e indicadores"],["sales","Vendas","Pedidos, clientes e atendimento"],["finance","Financeiro","Pagamentos e comprovativos"],["logistics","Logística","Entregas, levantamentos e reservas"],["support","Atendimento","Clientes e acompanhamento"],["viewer","Consulta","Acesso apenas de leitura"]];
-export default async function Admin(){const token=(await cookies()).get("pe_access_token")?.value;if(!token)redirect("/admin/login");const url=process.env.NEXT_PUBLIC_SUPABASE_URL!;const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;const u=await fetch(url+"/auth/v1/user",{headers:{apikey:key,Authorization:"Bearer "+token},cache:"no-store"});if(!u.ok)redirect("/admin/login");const user=await u.json();const p=await fetch(url+"/rest/v1/rpc/get_my_staff_profile",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:"{}",cache:"no-store"});const rows=await p.json();if(!p.ok||!Array.isArray(rows)||!rows[0]?.active)redirect("/admin/login");const profile=rows[0];return <main className="admin-shell"><header><Link href="/" className="admin-brand"><ShieldCheck/> PintoExpress <span>BACKOFFICE</span></Link><div><strong>{profile.full_name||user.email}</strong><small>{profile.role}</small><form action="/api/admin/logout" method="post"><button type="submit">Sair</button></form></div></header><section className="admin-content"><span className="eyebrow">PAINEL INTERNO</span><h1>Bom dia, {profile.full_name||"equipa"}.</h1><p>Este é o centro de operação da plataforma PintoExpress.</p><div className="admin-modules"><Link href="/admin/encomendas"><ShoppingCart/><strong>Encomendas</strong><span>Pedidos e estados</span></Link><Link href="/admin/pagamentos"><Wallet/><strong>Pagamentos</strong><span>M-Pesa e comprovativos</span></Link><Link href="/admin/logistica"><Truck/><strong>Logística</strong><span>Entrega e levantamento</span></Link><Link href="/admin/utilizadores"><Users/><strong>Utilizadores</strong><span>Perfis e permissões</span></Link><Link href="/admin/configuracoes"><Settings/><strong>Configurações</strong><span>Dados comerciais</span></Link></div><section className="admin-roles"><h2>Categorias de utilizadores</h2><div>{roles.map(r=><article key={r[0]}><strong>{r[1]}</strong><span>{r[2]}</span></article>)}</div></section></section></main>;}
+import Link from "next/link";
+import {cookies} from "next/headers";
+import {redirect} from "next/navigation";
+import {Activity,ArrowRight,ClipboardList,LayoutDashboard,LogOut,MessageCircle,Package,Settings,ShieldCheck,Truck,Users,Wallet} from "lucide-react";
+
+const roles=[
+  ["super_admin","Super Admin","Acesso total e gestão de utilizadores"],
+  ["admin","Administrador","Operações gerais e configurações"],
+  ["manager","Gestor","Gestão comercial e indicadores"],
+  ["sales","Vendas","Pedidos, clientes e atendimento"],
+  ["finance","Financeiro","Pagamentos e comprovativos"],
+  ["logistics","Logística","Entregas, levantamentos e reservas"],
+  ["support","Atendimento","Clientes e acompanhamento"],
+  ["viewer","Consulta","Acesso apenas de leitura"]
+];
+
+export default async function Admin(){
+  const token=(await cookies()).get("pe_access_token")?.value;
+  if(!token) redirect("/admin/login");
+  const url=process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+  const u=await fetch(url+"/auth/v1/user",{headers:{apikey:key,Authorization:"Bearer "+token},cache:"no-store"});
+  if(!u.ok) redirect("/admin/login");
+  const user=await u.json();
+  const p=await fetch(url+"/rest/v1/rpc/get_my_staff_profile",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:"{}",cache:"no-store"});
+  const rows=await p.json();
+  if(!p.ok||!Array.isArray(rows)||!rows[0]?.active) redirect("/admin/login");
+  const profile=rows[0];
+
+  return <main className="admin-shell">
+    <header className="admin-topbar">
+      <Link href="/" className="admin-brand"><ShieldCheck/> <span>PintoExpress</span><small>BALCÃO INTERNO</small></Link>
+      <nav className="admin-topnav" aria-label="Navegação interna">
+        <span className="admin-topnav-active"><LayoutDashboard size={15}/> Painel</span>
+        <Link href="/"><ArrowRight size={14}/> Site público</Link>
+        <a href="https://wa.me/258842553641"><MessageCircle size={14}/> WhatsApp</a>
+      </nav>
+      <div className="admin-user">
+        <div><strong>{profile.full_name||user.email}</strong><small>{profile.role}</small></div>
+        <form action="/api/admin/logout" method="post"><button type="submit" aria-label="Sair"><LogOut size={16}/></button></form>
+      </div>
+    </header>
+
+    <section className="admin-content">
+      <div className="admin-heading">
+        <div><span className="eyebrow">CENTRO DE OPERAÇÃO</span><h1>Bom dia, {profile.full_name||"equipa"}.</h1><p>Organize o trabalho do PintoExpress a partir de um único balcão.</p></div>
+        <div className="admin-heading-actions"><Link className="admin-primary-action" href="/"><Package size={16}/> Ver site</Link><a className="admin-secondary-action" href="https://wa.me/258842553641"><MessageCircle size={16}/> WhatsApp</a></div>
+      </div>
+
+      <section className="admin-summary" aria-label="Estado da operação">
+        <article><span>Encomendas</span><strong>—</strong><small>Aguardam ligação aos dados reais</small></article>
+        <article><span>Pagamentos</span><strong>—</strong><small>Sem indicadores fictícios</small></article>
+        <article><span>Logística</span><strong>—</strong><small>Sem indicadores fictícios</small></article>
+        <article><span>Atividade</span><strong>—</strong><small>Histórico operacional</small></article>
+      </section>
+
+      <section className="admin-workspace">
+        <div className="admin-workspace-head"><div><span className="eyebrow">OPERAÇÃO DIÁRIA</span><h2>Escolha onde trabalhar</h2></div><span className="admin-status"><Activity size={14}/> Estrutura preparada</span></div>
+        <div className="admin-workspace-grid">
+          <AdminModule icon={<ClipboardList/>} title="Encomendas" text="Consultar pedidos, referências e estados." status="Próxima fase"/>
+          <AdminModule icon={<Wallet/>} title="Pagamentos" text="Validar M-Pesa, transferências e comprovativos." status="Próxima fase"/>
+          <AdminModule icon={<Truck/>} title="Logística" text="Organizar entrega, levantamento e reservas." status="Próxima fase"/>
+          <AdminModule icon={<Users/>} title="Utilizadores" text="Gerir equipa, perfis e permissões." status="Disponível"/>
+          <AdminModule icon={<Settings/>} title="Configurações" text="Dados comerciais e parâmetros da plataforma." status="Próxima fase"/>
+        </div>
+      </section>
+
+      <section className="admin-roles">
+        <div className="admin-workspace-head"><div><span className="eyebrow">ACESSOS</span><h2>Perfis da equipa</h2></div><span className="admin-status">Controlo por função</span></div>
+        <div>{roles.map(r=><article key={r[0]}><strong>{r[1]}</strong><span>{r[2]}</span></article>)}</div>
+      </section>
+
+      <footer className="admin-footer"><span>PintoExpress · Balcão interno</span><span>+258 84 255 3641</span></footer>
+    </section>
+  </main>;
+}
+
+function AdminModule({icon,title,text:description,status}:{icon:React.ReactNode;title:string;description:string;status:string}){
+  return <article className="admin-module-card"><div className="admin-module-icon">{icon}</div><div><strong>{title}</strong><p>{description}</p></div><span>{status}</span></article>;
+}
