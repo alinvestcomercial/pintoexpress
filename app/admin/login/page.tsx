@@ -46,4 +46,5 @@ export default function AdminLogin(){
         <div className="admin-auth-note"><LockKeyhole size={15}/><span>Área exclusiva para utilizadores internos autorizados.</span></div>
       </section>
     </div>
-  </main>
+  </main>;
+}
