@@ -1,0 +1,9 @@
+import {NextResponse} from "next/server";
+const url=process.env.NEXT_PUBLIC_SUPABASE_URL;const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+export async function POST(req:Request){try{const {name,email,password}=await req.json();if(!url||!key)return NextResponse.json({error:"Autenticação não configurada."},{status:503});
+ const existing=await fetch(url+"/rest/v1/staff_profiles?select=id&role=eq.super_admin&active=eq.true",{headers:{apikey:key}});const rows=await existing.json();if(rows?.length)return NextResponse.json({error:"O Super Admin inicial já foi configurado."},{status:409});
+ const signup=await fetch(url+"/auth/v1/signup",{method:"POST",headers:{apikey:key,"Content-Type":"application/json"},body:JSON.stringify({email,password,data:{name}})});const d=await signup.json();if(!signup.ok)return NextResponse.json({error:d.msg||d.error_description||"Não foi possível criar a conta."},{status:400});
+ if(!d.access_token)return NextResponse.json({message:"Conta criada. Confirme o email se a plataforma exigir confirmação e depois entre em /admin/login para concluir o acesso."});
+ const claim=await fetch(url+"/rest/v1/rpc/claim_first_super_admin",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+d.access_token,"Content-Type":"application/json"},body:JSON.stringify({admin_name:name})});const cd=await claim.json();if(!claim.ok)return NextResponse.json({error:cd.message||"Conta criada, mas não foi possível atribuir o Super Admin."},{status:400});
+ const res=NextResponse.json({message:"Super Admin configurado. Já pode entrar na área da equipa."});res.cookies.set("pe_access_token",d.access_token,{httpOnly:true,secure:true,sameSite:"lax",path:"/",maxAge:d.expires_in||3600});return res;
+ }catch{return NextResponse.json({error:"Erro ao configurar o primeiro acesso."},{status:500});}}
