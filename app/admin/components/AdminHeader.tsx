@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {ArrowRight,LayoutDashboard,LogOut,ShieldCheck} from "lucide-react";
+import {ArrowRight,LayoutDashboard,LogOut,MessageCircle,ShieldCheck} from "lucide-react";
 export default function AdminHeader({active,name,role}:{active:"dashboard"|"messages";name:string;role:string}){
  const labels:Record<string,string>={super_admin:"Super Admin",admin:"Administrador",manager:"Gestor",sales:"Vendas",finance:"Financeiro",logistics:"Logística",support:"Atendimento",viewer:"Consulta"};
  return <header className="admin-topbar">
