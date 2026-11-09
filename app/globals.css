@@ -665,3 +665,22 @@ html{overflow-x:hidden}body{overflow-x:hidden}img,svg{max-width:100%}button,a,in
 .admin-order-state{align-items:flex-start}
 @media(max-width:760px){.admin-order-row{grid-template-columns:1fr 1fr;gap:12px}.admin-order-total{grid-column:1/-1;align-items:flex-start}.admin-order-total>strong{text-align:left}.admin-order-update{justify-content:flex-start}}
 @media(max-width:480px){.admin-order-row{grid-template-columns:1fr}.admin-order-total{grid-column:auto}.admin-order-update{width:100%}.admin-order-update select{flex:1;max-width:none}}
+
+
+/* Dashboard: cards compactos sem perder hierarquia */
+.admin-workspace-grid{gap:12px}
+.admin-module-card{min-height:154px;padding:16px;gap:12px;border-radius:14px}
+.admin-module-icon{width:38px;height:38px;border-radius:11px}
+.admin-module-icon svg{width:19px;height:19px}
+.admin-module-copy strong{font-size:16px}
+.admin-module-copy p{margin-top:6px;font-size:11px;line-height:1.45}
+.admin-module-open{padding-top:9px;font-size:10px}
+@media(max-width:560px){.admin-module-card{min-height:140px;padding:15px;gap:10px}}
+
+/* Navegação contextual uniforme nas subpáginas: complementa, não duplica o menu global */
+.admin-subpage-nav{display:flex;align-items:center;gap:9px;min-height:36px;margin:0 0 22px;color:#829087;font-size:11px}
+.admin-subpage-nav a{display:inline-flex;align-items:center;gap:7px;color:var(--green);font-weight:800;text-decoration:none}
+.admin-subpage-nav a:hover{text-decoration:underline}
+.admin-subpage-nav>span[aria-current="page"]{color:var(--green-dark);font-weight:800}
+.admin-subpage-nav>svg{color:#aab5ac}
+@media(max-width:560px){.admin-subpage-nav{margin-bottom:17px;font-size:10px}}
