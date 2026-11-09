@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {ArrowUpRight,ClipboardList,Package,Settings,Truck,Users,Wallet} from "lucide-react";
 import AdminHeader from "./components/AdminHeader";
+import RoleManager from "./components/RoleManager";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 
@@ -24,7 +25,7 @@ export default async function Admin(){
   <section className="admin-workspace"><div className="admin-workspace-head"><div><span className="eyebrow">OPERAÇÃO DIÁRIA</span><h2>O que vamos tratar hoje?</h2><p>Aceda directamente às áreas de trabalho do PintoExpress.</p></div></div><div className="admin-workspace-grid">
    <Link href="/admin/encomendas"><AdminModule icon={<ClipboardList/>} title="Encomendas" description="Consulte pedidos, acompanhe referências e actualize estados." number="01"/></Link><Link href="/admin/pagamentos"><AdminModule icon={<Wallet/>} title="Pagamentos" description="Acompanhe pagamentos, transferências e comprovativos." number="02"/></Link><Link href="/admin/logistica"><AdminModule icon={<Truck/>} title="Logística" description="Organize entregas, levantamentos e reservas." number="03"/></Link><Link href="/admin/utilizadores"><AdminModule icon={<Users/>} title="Utilizadores" description="Faça a gestão da equipa, dos perfis e das permissões." number="04"/></Link><Link href="/admin/configuracoes"><AdminModule icon={<Settings/>} title="Configurações" description="Ajuste os dados comerciais e parâmetros da plataforma." number="05"/></Link>
   </div></section>
-  <section className="admin-roles"><div className="admin-workspace-head"><div><span className="eyebrow">ACESSOS</span><h2>Perfis da equipa</h2></div><span className="admin-status">Controlo por função</span></div><div>{roles.map(r=><article key={r[0]}><strong>{r[1]}</strong><span>{r[2]}</span></article>)}</div></section>
+  <section className="admin-roles"><div className="admin-workspace-head"><div><span className="eyebrow">ACESSOS</span><h2>Perfis da equipa</h2><p>Seleccione um perfil para consultar, adicionar ou gerir os utilizadores associados.</p></div></div><RoleManager roles={roles.map(([id,name,description])=>({id,name,description}))}/></section>
   <footer className="admin-footer"><div><strong>PintoExpress</strong><span>Balcão interno · Operação da plataforma</span></div><nav aria-label="Links internos"><Link href="/admin">Painel</Link><Link href="/admin/whatsapp">Mensagens WhatsApp</Link><Link href="/">Site público</Link></nav></footer>
  </section></main>;
 }
