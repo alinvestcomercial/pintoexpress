@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowRight, Menu, ShoppingBasket, X } from "lucide-react";
+import { ArrowRight, Menu, ShoppingBasket, X, ShieldCheck } from "lucide-react";
 import {useCart} from "./CartProvider";
-function Header(){const [open,setOpen]=useState(false);const {items}=useCart();const count=items.reduce((n,x)=>n+x.quantity,0);return <header className="site-header"><div className="container nav"><Link className="brand" href="/"><span className="brand-mark">P</span><span><strong>PintoExpress</strong><small>AVICULTURA · MOÇAMBIQUE</small></span></Link><nav className={open?"main-nav open":"main-nav"} aria-label="Navegação principal"><Link href="/">Início</Link><Link href="/catalogo">Catálogo</Link><Link href="/solucoes">Soluções</Link><Link href="/como-comprar">Como comprar</Link><Link href="/encomendas-entregas">Encomendas e entregas</Link><Link href="/contactos">Contactos</Link></nav><div className="nav-actions"><Link className="nav-cta" href="/pedido"><ShoppingBasket size={15}/> Meu pedido ({count}) <ArrowRight size={15}/></Link><button className="mobile-menu" aria-label={open?"Fechar menu":"Abrir menu"} onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button></div></div></header>}
+function Header(){const [open,setOpen]=useState(false);const {items}=useCart();const count=items.reduce((n,x)=>n+x.quantity,0);return <header className="site-header"><div className="container nav"><Link className="brand" href="/"><span className="brand-mark">P</span><span><strong>PintoExpress</strong><small>AVICULTURA · MOÇAMBIQUE</small></span></Link><nav className={open?"main-nav open":"main-nav"} aria-label="Navegação principal"><Link href="/">Início</Link><Link href="/catalogo">Catálogo</Link><Link href="/solucoes">Soluções</Link><Link href="/como-comprar">Como comprar</Link><Link href="/encomendas-entregas">Encomendas e entregas</Link><Link href="/contactos">Contactos</Link></nav><div className="nav-actions"><Link className="nav-backoffice" href="/admin/login"><ShieldCheck size={14}/> Equipa</Link><Link className="nav-cta" href="/pedido"><ShoppingBasket size={15}/> Meu pedido ({count}) <ArrowRight size={15}/></Link><button className="mobile-menu" aria-label={open?"Fechar menu":"Abrir menu"} onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button></div></div></header>}
 function Footer(){return <footer className="site-footer">
   <div className="container footer-main">
     <div className="footer-brand-column">
@@ -28,7 +28,7 @@ function Footer(){return <footer className="site-footer">
       <Link href="/contactos">Contactos</Link>
       <Link href="/pedido">O meu pedido</Link>
     </div>
-    <div className="footer-contact-column">
+    <div className="footer-column"><strong>Atendimento</strong><a href="https://wa.me/258842553641">WhatsApp +258 84 255 3641</a><a href="tel:+258842553641">+258 84 255 3641</a><Link href="/admin/login">Acesso à equipa</Link></div><div className="footer-contact-column">
       <strong>Conte connosco</strong>
       <p>Precisa de orientação para encontrar os produtos ou a solução adequada?</p>
       <Link className="footer-contact-link" href="/contactos">Fale com a nossa equipa <ArrowRight size={15}/></Link>
