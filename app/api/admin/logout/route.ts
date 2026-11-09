@@ -1,1 +1,2 @@
-import {NextResponse} from "next/server";export async function POST(){const r=NextResponse.json({ok:true});r.cookies.delete("pe_access_token");r.cookies.delete("pe_refresh_token");return r;}
+import {NextResponse} from "next/server";
+export async function POST(){const r=NextResponse.redirect(new URL("/admin/login",process.env.NEXT_PUBLIC_SITE_URL||"http://localhost:3000"));r.cookies.set("pe_access_token","",{httpOnly:true,expires:new Date(0),secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/"});r.cookies.set("pe_refresh_token","",{httpOnly:true,expires:new Date(0),secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/"});return r;}
