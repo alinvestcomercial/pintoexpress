@@ -618,3 +618,29 @@ html{overflow-x:hidden}body{overflow-x:hidden}img,svg{max-width:100%}button,a,in
 .admin-shell>.admin-content{width:min(1180px,calc(100% - 40px));margin:0 auto}
 @media(max-width:900px){.admin-topbar{grid-template-columns:minmax(0,1fr) auto;gap:8px}.admin-topnav{grid-column:1/-1;grid-row:2;display:flex;min-height:40px;overflow-x:auto;justify-content:flex-start}.admin-topbar{padding-top:10px;padding-bottom:8px}}
 @media(max-width:560px){.admin-topbar{grid-template-columns:minmax(0,1fr) auto;padding-left:12px;padding-right:12px}.admin-brand small{display:none}.admin-topnav a{padding:8px 9px;font-size:10px}.admin-user{gap:7px}.admin-user button.admin-logout{min-width:68px;padding:0 9px}}
+
+
+/* Backoffice header: single compact dropdown beside logout */
+.admin-topbar{grid-template-columns:minmax(0,1fr) auto!important;min-height:72px}
+.admin-user{display:flex;align-items:center;gap:10px}
+.admin-menu-dropdown{position:relative}
+.admin-menu-dropdown summary{list-style:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:92px;height:40px;padding:0 14px;border:0;border-radius:9px;background:var(--green);color:#fff;font-size:11px;font-weight:900;cursor:pointer;user-select:none}
+.admin-menu-dropdown summary::-webkit-details-marker{display:none}
+.admin-menu-dropdown summary svg{flex:0 0 auto}
+.admin-menu-dropdown[open] summary{background:var(--green-dark)}
+.admin-menu-dropdown nav{position:absolute;right:0;top:calc(100% + 9px);z-index:100;min-width:220px;padding:7px;border:1px solid #e0e8e1;border-radius:13px;background:#fff;box-shadow:0 16px 38px rgba(8,39,25,.17);display:grid;gap:3px}
+.admin-menu-dropdown nav a{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:8px;color:var(--green-dark);font-size:11px;font-weight:750;white-space:nowrap}
+.admin-menu-dropdown nav a:hover,.admin-menu-dropdown nav a.admin-menu-active{background:#edf5ef;color:var(--green)}
+.admin-menu-dropdown nav a svg{color:var(--green);flex:0 0 auto}
+.admin-role-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.admin-role-card{padding:13px;gap:6px;border-radius:12px}
+.admin-role-symbol{width:32px;height:32px;border-radius:9px}
+.admin-role-card>strong{font-size:12px}
+.admin-role-card>span:not(.admin-role-symbol){min-height:30px;font-size:9px;line-height:1.4}
+.admin-role-card>small{padding-top:7px;font-size:8px}
+.admin-role-card>small b{font-size:9px}
+.admin-roles .admin-workspace-head>div{width:100%}
+.admin-roles .admin-workspace-head>div>p{max-width:none;width:100%;white-space:normal;text-wrap:pretty}
+@media(max-width:900px){.admin-role-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.admin-topbar{grid-template-columns:minmax(0,1fr) auto!important}.admin-user{gap:8px}}
+@media(max-width:680px){.admin-role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-brand small{display:none}.admin-user>div strong{max-width:125px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.admin-menu-dropdown summary{min-width:78px;padding:0 10px}}
+@media(max-width:420px){.admin-user{gap:6px}.admin-menu-dropdown summary{min-width:70px;height:38px;padding:0 8px}.admin-menu-dropdown summary svg:last-child{display:none}.admin-user button.admin-logout{min-width:64px;height:38px;padding:0 8px}}
