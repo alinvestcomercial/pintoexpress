@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useMemo,useState} from "react";
-import {Boxes,ClipboardList,RefreshCw,Search,Check} from "lucide-react";
+import {Boxes,ClipboardList,RefreshCw,Search,Check,ArrowRight} from "lucide-react";
 type Order={id:string;reference:string;status:string;total_amount:number;currency:string;payment_method:string|null;payment_status:string;channel:string;created_at:string;customer?:{full_name:string|null;phone:string|null;whatsapp_phone:string|null}|null};
 const labels:Record<string,string>={draft:"Rascunho",pending_payment:"Aguarda pagamento",payment_submitted:"Pagamento submetido",paid:"Pago",confirmed:"Confirmada",preparing:"Em preparação",ready:"Pronta",out_for_delivery:"Em entrega",ready_for_pickup:"Pronta para levantamento",completed:"Concluída",cancelled:"Cancelada"};
 const allowed:Record<string,string[]>={super_admin:Object.keys(labels),admin:Object.keys(labels),manager:Object.keys(labels),sales:["draft","pending_payment","payment_submitted","confirmed","cancelled"],support:["draft","pending_payment","payment_submitted","confirmed","cancelled"],finance:["payment_submitted","paid","cancelled"],logistics:["preparing","ready","out_for_delivery","ready_for_pickup","completed","cancelled"],viewer:[]};
