@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {ArrowUpRight,ClipboardList,Package,Settings,Truck,Users,Wallet,UserRound} from "lucide-react";
+import {ArrowUpRight,ClipboardList,Package,Settings,Truck,Users,Wallet,UserRound,Boxes,PackageSearch,CalendarDays,BarChart3} from "lucide-react";
 import AdminHeader from "./components/AdminHeader";
 import RoleManager from "./components/RoleManager";
 import {cookies} from "next/headers";
