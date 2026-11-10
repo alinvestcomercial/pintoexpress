@@ -982,3 +982,9 @@ html{overflow-x:hidden}body{overflow-x:hidden}img,svg{max-width:100%}button,a,in
 .orders-modal-submit{border-color:#1c5835;background:#1c5835;color:#fff}
 .orders-modal-submit:disabled,.orders-modal-cancel:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:560px){.orders-modal-backdrop{align-items:flex-end;padding:8px}.orders-action-modal{max-height:90vh;padding:17px;border-radius:15px}.orders-modal-fields{grid-template-columns:1fr;gap:10px}.orders-modal-fields label:has(textarea){grid-column:auto}.orders-action-modal>header h3{font-size:17px}.orders-action-modal>footer>*{flex:1}}
+
+/* Confirmação e rastreabilidade da operação logística na encomenda */
+.orders-logistics-incident{display:block;margin-top:5px;padding:7px 8px;border-left:2px solid #d4a347;border-radius:0 6px 6px 0;background:#fff8e9;color:#866321!important;line-height:1.5}
+.orders-detail-line .orders-proof-link{display:inline-flex;max-width:100%;overflow-wrap:anywhere}
+.orders-modal-fields label:has(textarea){grid-column:1/-1}
+@media(max-width:560px){.orders-modal-fields label:has(textarea){grid-column:auto}}
