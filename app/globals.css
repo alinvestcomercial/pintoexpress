@@ -1077,3 +1077,54 @@ html{overflow-x:hidden}body{overflow-x:hidden}img,svg{max-width:100%}button,a,in
 .catalog-modal .catalog-btn-light{border-color:#e0e8e1;background:#fff;color:#617065}
 @media(max-width:1050px){.catalog-product-grid,.catalog-package-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.catalog-hero{align-items:flex-start;flex-direction:column;padding:21px}.catalog-hero h1{font-size:23px}.catalog-hero-actions{width:100%}.catalog-hero-actions>*{flex:1}.catalog-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-product-grid,.catalog-package-grid{grid-template-columns:1fr}.catalog-toolbar{align-items:stretch}.catalog-search{max-width:none}.catalog-filters{overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.catalog-filters button{white-space:nowrap}.catalog-form{grid-template-columns:1fr}.catalog-form-wide,.catalog-form-check{grid-column:auto}.catalog-modal-backdrop{align-items:flex-end;padding:7px}.catalog-modal{max-height:92vh;padding:17px;border-radius:14px}.catalog-tabs{width:100%}.catalog-tabs button{flex:1;justify-content:center;padding:0 7px;font-size:9px}}
+
+
+/* Catálogo comercial — camada visual integrada com disponibilidade de stock */
+.catalog-page{gap:18px}
+.catalog-hero{padding:25px 28px;border-radius:16px;box-shadow:0 10px 26px rgba(20,65,37,.10)}
+.catalog-hero h1{font-size:29px;letter-spacing:-.045em}
+.catalog-hero p{max-width:560px;font-size:12px}
+.catalog-stats>div{position:relative;min-height:104px;justify-content:center;padding:16px 18px;border-radius:13px}
+.catalog-stats>div:before{content:"";position:absolute;left:0;top:15px;bottom:15px;width:3px;border-radius:4px;background:#a9c8b0}
+.catalog-stats>div:nth-child(3):before{background:#d2b45e}
+.catalog-stats>div:nth-child(4):before{background:#d28a71}
+.catalog-stats strong{font-size:27px}
+.catalog-tabs{width:100%;background:transparent;border:0;border-bottom:1px solid #e5ece6;border-radius:0;padding:0;gap:18px}
+.catalog-tabs button{height:43px;padding:0 5px;border-radius:0;border-bottom:3px solid transparent}
+.catalog-tabs button.active{background:transparent;color:#174f30;box-shadow:none;border-bottom-color:#2b7545}
+.catalog-toolbar{padding:13px;background:#fff;border:1px solid #e7eee8;border-radius:12px}
+.catalog-search{max-width:460px;margin:0;background:#f8faf8}
+.catalog-filters{gap:5px}
+.catalog-filters button{padding:7px 10px;font-size:9px}
+.catalog-filters button.selected{background:#eaf3ec;border-color:#bfd4c3;color:#205c35}
+.catalog-product-grid,.catalog-package-grid{gap:13px}
+.catalog-product-card,.catalog-package-card{border-radius:14px;box-shadow:0 4px 14px rgba(24,57,34,.035)}
+.catalog-product-card:hover,.catalog-package-card:hover{transform:translateY(-2px);box-shadow:0 9px 22px rgba(24,57,34,.075)}
+.catalog-product-card{padding:15px}
+.catalog-card-top{margin-bottom:12px}
+.catalog-category-icon{background:#edf4ee;color:#23643b}
+.catalog-card-category{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#78877b;font-weight:900}
+.catalog-product-card h3,.catalog-package-card h3{font-size:16px;line-height:1.3;letter-spacing:-.025em;margin:5px 0 6px;color:#204a2e}
+.catalog-product-card>p,.catalog-package-card>p{min-height:37px;font-size:10px;line-height:1.55;color:#78847b}
+.catalog-product-meta,.catalog-package-meta{padding-top:9px;border-top:1px solid #edf1ed}
+.catalog-stock-line{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 10px;margin-top:12px;padding:10px 11px;background:#f5f8f5;border:1px solid #e8efe9;border-radius:9px}
+.catalog-stock-line>span{display:flex;align-items:center;gap:6px;font-size:9px;color:#647368;font-weight:800}
+.catalog-stock-line>span svg{color:#33734a}
+.catalog-stock-line>strong{font-size:12px;color:#205b35;font-weight:900}
+.catalog-stock-line>small{grid-column:1/-1;font-size:8px;color:#8a968d}
+.catalog-card-bottom{margin-top:12px;padding-top:11px;border-top:1px solid #edf1ed}
+.catalog-card-bottom>div>small{font-size:8px;color:#87938a}
+.catalog-card-bottom>div>strong{font-size:15px;color:#214d31}
+.catalog-card-actions button{width:30px;height:30px;border-radius:8px}
+.catalog-package-card{padding:17px}
+.catalog-package-head{margin-bottom:12px}
+.catalog-bird-count{display:flex;align-items:baseline;gap:7px;margin:8px 0}
+.catalog-bird-count strong{font-size:31px;color:#205b35;letter-spacing:-.05em}
+.catalog-bird-count span{font-size:11px;color:#7b887e}
+.catalog-empty{padding:55px 20px}
+.catalog-modal{border-radius:17px;padding:23px}
+.catalog-form{gap:13px}
+.catalog-form label{font-size:10px}
+.catalog-form input,.catalog-form select,.catalog-form textarea{border-radius:9px}
+@media(max-width:900px){.catalog-product-grid,.catalog-package-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-hero{align-items:flex-start;flex-direction:column}.catalog-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.catalog-page{gap:13px}.catalog-hero{padding:19px;border-radius:13px}.catalog-hero h1{font-size:23px}.catalog-hero p{font-size:10px}.catalog-hero-actions{width:100%}.catalog-hero-actions .catalog-btn{flex:1}.catalog-stats{gap:7px}.catalog-stats>div{min-height:88px;padding:12px}.catalog-stats strong{font-size:22px}.catalog-tabs{gap:12px}.catalog-tabs button{font-size:9px;padding:0 2px}.catalog-toolbar{padding:9px}.catalog-search{max-width:none;min-width:100%}.catalog-filters{overflow-x:auto;flex-wrap:nowrap;width:100%;padding-bottom:2px}.catalog-filters button{white-space:nowrap;flex-shrink:0}.catalog-product-grid,.catalog-package-grid{grid-template-columns:1fr}.catalog-product-card{padding:13px}.catalog-product-card>p,.catalog-package-card>p{min-height:0}.catalog-modal{padding:16px}.catalog-form{grid-template-columns:1fr}}
