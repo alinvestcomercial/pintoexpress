@@ -31,6 +31,7 @@ export default function PedidoPage(){
   const [lot,setLot]=useState("");
   const [experience,setExperience]=useState("");
   const [flow,setFlow]=useState("");
+  const [paymentMethod,setPaymentMethod]=useState("M-Pesa");
 
   useEffect(()=>{
     const q=new URLSearchParams(window.location.search);
@@ -74,7 +75,7 @@ export default function PedidoPage(){
           p_bird_type:species?species.toLowerCase():null,
           p_quantity:packageSlug?1:null,
           p_delivery:delivery,
-          p_notes:notes||null
+          p_notes:(notes?notes+"\n\n":"")+"Modalidade de pagamento escolhida: "+paymentMethod
         })
       });
 
@@ -94,9 +95,10 @@ export default function PedidoPage(){
         "Espécie: "+(species||"A definir"),
         "Lote: "+(lot||size+" aves"),
         "Recepção: "+delivery,
+        "Pagamento: "+paymentMethod,
         "",
         "Observações: "+(notes||"Sem observações"),
-        "Peço a confirmação do preço final, disponibilidade e modalidade de pagamento aplicável."
+        "Peço a confirmação do preço final, disponibilidade e instruções para a modalidade de pagamento escolhida."
       ].join("\n");
 
       if(whatsapp){
@@ -147,7 +149,7 @@ export default function PedidoPage(){
           <label><span>Telefone / WhatsApp *</span><input required type="tel" value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+258 8x xxx xxxx"/></label>
           <label><span>Província / Localidade *</span><input required value={location} onChange={e=>setLocation(e.target.value)} placeholder="Ex.: Maputo, Matola"/></label>
           <label><span>Preferência de recepção</span><select value={delivery} onChange={e=>setDelivery(e.target.value)}><option>A combinar</option><option>Levantamento</option><option>Entrega (consultar condições)</option></select></label>
-          <label><span>Observações</span><textarea rows={3} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Data pretendida, capacidade do aviário ou outras informações..."/></label>
+          <label><span>Modalidade de pagamento</span><select value={paymentMethod} onChange={e=>setPaymentMethod(e.target.value)}><option>M-Pesa</option><option>Transferência bancária</option></select><small>Escolha livremente. Esta preferência fica associada à encomenda; em pagamentos por prestações, cada prestação pode ser liquidada por M-Pesa, transferência bancária ou uma combinação das duas.</small></label>\n          <label><span>Observações</span><textarea rows={3} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Data pretendida, capacidade do aviário ou outras informações..."/></label>
           <button className="submit-request" type="submit" disabled={submitting}><MessageCircle size={17}/> {submitting?"A registar...":"Registar encomenda"} <ArrowRight size={16}/></button>
           {reference&&<div className="request-reference" role="status"><strong>Referência: {reference}</strong><span>Use esta referência no WhatsApp, no comprovativo e no acompanhamento.</span><Link href={"/encomendas-entregas?ref="+encodeURIComponent(reference)}>Acompanhar pedido <ArrowRight size={14}/></Link></div>}
           {feedback&&<div className="request-feedback" role="status">{feedback}</div>}
