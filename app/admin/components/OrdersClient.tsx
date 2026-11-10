@@ -9,7 +9,7 @@ const money=(n:number,c="MZN")=>Number(n||0).toLocaleString("pt-MZ",{minimumFrac
 const date=(s:string)=>new Date(s).toLocaleDateString("pt-MZ",{day:"2-digit",month:"short",year:"numeric"});
 const flow=["pending_payment","payment_submitted","paid","confirmed","preparing","ready","out_for_delivery","completed"];
 const eventLabel=(e:{event_type:string;status:string|null;message:string|null})=>e.message||((e.status&&labels[e.status])?`Estado actualizado: ${labels[e.status]}`:e.event_type.replaceAll("_"," "));
-const phoneHref=(phone:string|null|undefined)=>{const n=(phone||"").replace(/\\D/g,"");return n?`https://wa.me/${n.startsWith("258")?n:"258"+n}`:null};
+const phoneHref=(phone:string|null|undefined)=>{const n=(phone||"").replace(/\D/g,"");return n?`https://wa.me/${n.startsWith("258")?n:"258"+n}`:null};
 export default function Orders({role="viewer"}:{role?:string}){
  const [orders,setOrders]=useState<Order[]>([]),[loading,setLoading]=useState(true),[query,setQuery]=useState(""),[status,setStatus]=useState("all"),[error,setError]=useState(""),[saving,setSaving]=useState<string|null>(null),[pending,setPending]=useState<Record<string,string>>({}),[expanded,setExpanded]=useState<string|null>(null),[view,setView]=useState("all");
  async function load(){setLoading(true);setError("");try{const r=await fetch("/api/admin/orders",{cache:"no-store"});const d=await r.json();if(!r.ok)throw new Error(d.error||"Não foi possível carregar as encomendas.");setOrders(d.orders||[])}catch(e){setError(e instanceof Error?e.message:"Erro ao carregar encomendas.")}finally{setLoading(false)}}
