@@ -1,0 +1,114 @@
+-- PintoExpress: stock, encomendas e logística com movimentos auditáveis e transições seguras.
+alter table public.fulfillments add column if not exists incident_notes text;
+alter table public.fulfillments add column if not exists proof_reference text;
+create index if not exists fulfillments_schedule_idx on public.fulfillments(scheduled_for,status);
+create index if not exists inventory_movements_lot_created_idx on public.inventory_movements(inventory_lot_id,created_at desc);
+
+create or replace function public.staff_record_stock_movement(p_lot_id uuid,p_movement_type text,p_quantity numeric,p_reason text)
+returns jsonb language plpgsql set search_path=public,private,pg_temp as $function$
+declare v_lot public.inventory_lots%rowtype;
+begin
+ if not private.has_staff_role(array['super_admin'::user_role,'admin'::user_role,'manager'::user_role,'logistics'::user_role]) then raise exception 'Sem permissões para movimentar stock.' using errcode='42501';end if;
+ if p_movement_type not in ('entry','adjustment') or p_quantity=0 or p_quantity is null or nullif(trim(p_reason),'') is null then raise exception 'Tipo, quantidade e motivo são obrigatórios.' using errcode='22023';end if;
+ select * into v_lot from public.inventory_lots where id=p_lot_id for update;
+ if not found then raise exception 'Lote não encontrado.';end if;
+ if p_movement_type='entry' and p_quantity<0 then raise exception 'Uma entrada deve ter quantidade positiva.';end if;
+ if p_movement_type='adjustment' and v_lot.available_quantity+p_quantity<0 then raise exception 'O ajuste não pode deixar o stock disponível negativo.' using errcode='23514';end if;
+ update public.inventory_lots set available_quantity=available_quantity+p_quantity,updated_at=now() where id=p_lot_id returning * into v_lot;
+ insert into public.inventory_movements(inventory_lot_id,movement_type,quantity,notes,created_by)
+ values(p_lot_id,p_movement_type,abs(p_quantity),left(trim(p_reason),300),auth.uid());
+ return jsonb_build_object('lot_id',p_lot_id,'movement_type',p_movement_type,'quantity',p_quantity,'available_quantity',v_lot.available_quantity,'reserved_quantity',v_lot.reserved_quantity);
+end;$function$;
+
+create or replace function public.staff_reserve_order_stock(p_order_id uuid)
+returns jsonb language plpgsql set search_path=public,private,pg_temp as $function$
+declare v_item record;v_lot record;v_remaining numeric;v_take numeric;v_reservation_id uuid;v_reserved numeric:=0;v_existing numeric;
+begin
+ if not private.has_staff_role(array['super_admin'::user_role,'admin'::user_role,'manager'::user_role,'sales'::user_role,'logistics'::user_role]) then raise exception 'Sem permissões para reservar stock.' using errcode='42501';end if;
+ perform 1 from public.orders where id=p_order_id for update;if not found then raise exception 'Encomenda não encontrada.';end if;
+ if exists(select 1 from public.stock_reservations where order_id=p_order_id and status='consumed') then raise exception 'O stock desta encomenda já foi consumido.';end if;
+ if exists(select 1 from public.stock_reservations where order_id=p_order_id and status='reserved') then select coalesce(sum(quantity),0) into v_existing from public.stock_reservations where order_id=p_order_id and status='reserved';return jsonb_build_object('order_id',p_order_id,'status','already_reserved','quantity',v_existing);end if;
+ if not exists(select 1 from public.order_items where order_id=p_order_id) then raise exception 'A encomenda não tem artigos para reservar.';end if;
+ for v_item in select oi.* from public.order_items oi where oi.order_id=p_order_id order by oi.created_at loop
+  v_remaining:=v_item.quantity;
+  for v_lot in select il.* from public.inventory_lots il where il.active=true and il.available_quantity>0 and (il.availability_date is null or il.availability_date<=current_date) and ((v_item.product_id is not null and il.product_id=v_item.product_id) or (v_item.package_id is not null and il.package_id=v_item.package_id)) order by il.availability_date nulls first,il.created_at for update loop
+   exit when v_remaining<=0;v_take:=least(v_remaining,v_lot.available_quantity);if v_take<=0 then continue;end if;
+   insert into public.stock_reservations(order_id,order_item_id,inventory_lot_id,quantity,status,created_by) values(p_order_id,v_item.id,v_lot.id,v_take,'reserved',auth.uid()) returning id into v_reservation_id;
+   update public.inventory_lots set available_quantity=available_quantity-v_take,reserved_quantity=reserved_quantity+v_take,updated_at=now() where id=v_lot.id;
+   insert into public.inventory_movements(inventory_lot_id,order_id,order_item_id,stock_reservation_id,movement_type,quantity,notes,created_by) values(v_lot.id,p_order_id,v_item.id,v_reservation_id,'reservation',v_take,'Reserva associada à encomenda',auth.uid());
+   v_remaining:=v_remaining-v_take;v_reserved:=v_reserved+v_take;
+  end loop;
+  if v_remaining>0 then raise exception 'Stock insuficiente para %.',v_item.item_name using errcode='P0001';end if;
+ end loop;
+ insert into public.order_events(order_id,status,event_type,message,metadata) values(p_order_id,'confirmed','stock_reserved','Stock reservado para a encomenda.',jsonb_build_object('quantity',v_reserved));
+ return jsonb_build_object('order_id',p_order_id,'status','reserved','quantity',v_reserved);
+end;$function$;
+
+create or replace function public.staff_consume_order_stock(p_order_id uuid)
+returns jsonb language plpgsql set search_path=public,private,pg_temp as $function$
+declare v_r record;v_total numeric:=0;v_expected numeric;v_reserved numeric;
+begin
+ if not private.has_staff_role(array['super_admin'::user_role,'admin'::user_role,'manager'::user_role,'logistics'::user_role]) then raise exception 'Sem permissões para dar saída ao stock.' using errcode='42501';end if;
+ perform 1 from public.orders where id=p_order_id for update;if not found then raise exception 'Encomenda não encontrada.';end if;
+ if exists(select 1 from public.stock_reservations where order_id=p_order_id and status='consumed') then raise exception 'Stock desta encomenda já foi consumido.';end if;
+ select coalesce(sum(quantity),0) into v_expected from public.order_items where order_id=p_order_id;
+ select coalesce(sum(quantity),0) into v_reserved from public.stock_reservations where order_id=p_order_id and status='reserved';
+ if v_expected<=0 or v_reserved<v_expected then raise exception 'Não é possível concluir: a reserva de stock está ausente ou incompleta.' using errcode='23514';end if;
+ for v_r in select sr.* from public.stock_reservations sr where sr.order_id=p_order_id and sr.status='reserved' for update loop
+  update public.inventory_lots set reserved_quantity=reserved_quantity-v_r.quantity,updated_at=now() where id=v_r.inventory_lot_id and reserved_quantity>=v_r.quantity;
+  if not found then raise exception 'Saldo reservado inconsistente no lote.';end if;
+  update public.stock_reservations set status='consumed',updated_at=now() where id=v_r.id;
+  insert into public.inventory_movements(inventory_lot_id,order_id,order_item_id,stock_reservation_id,movement_type,quantity,notes,created_by) values(v_r.inventory_lot_id,p_order_id,v_r.order_item_id,v_r.id,'exit',v_r.quantity,'Saída de stock após entrega/levantamento',auth.uid());
+  v_total:=v_total+v_r.quantity;
+ end loop;
+ return jsonb_build_object('order_id',p_order_id,'status','consumed','quantity',v_total);
+end;$function$;
+
+create or replace function public.staff_update_order_status(p_order_id uuid,p_status public.order_status,p_message text default null)
+returns jsonb language plpgsql set search_path=public,private,pg_temp as $function$
+declare v_order public.orders%rowtype;v_role public.user_role;v_allowed boolean:=false;v_current text;v_next text;
+begin
+ if not private.has_staff_role(array['super_admin'::user_role,'admin'::user_role,'manager'::user_role,'sales'::user_role,'support'::user_role,'finance'::user_role,'logistics'::user_role]) then raise exception 'Acesso interno não autorizado.' using errcode='42501';end if;
+ select role into v_role from public.staff_profiles where id=auth.uid() and active=true;
+ select * into v_order from public.orders where id=p_order_id for update;if not found then raise exception 'Encomenda não encontrada.';end if;
+ v_current:=v_order.status::text;v_next:=p_status::text;if v_current=v_next then raise exception 'A encomenda já se encontra neste estado.';end if;
+ if v_role in ('super_admin','admin','manager') then v_allowed:=true;
+ elsif v_role in ('sales','support') then v_allowed:=v_next in ('draft','pending_payment','payment_submitted','cancelled') and v_current in ('draft','pending_payment','payment_submitted');
+ elsif v_role='finance' then v_allowed:=v_next in ('paid','cancelled') and v_current in ('pending_payment','payment_submitted','paid');
+ elsif v_role='logistics' then v_allowed:=v_next in ('preparing','ready','out_for_delivery','ready_for_pickup','completed','cancelled') and v_current in ('confirmed','preparing','ready','out_for_delivery','ready_for_pickup');end if;
+ if not v_allowed then raise exception 'Transição não permitida para o seu perfil.' using errcode='42501';end if;
+ if not ((v_current='draft' and v_next in ('pending_payment','cancelled')) or (v_current='pending_payment' and v_next in ('payment_submitted','paid','cancelled')) or (v_current='payment_submitted' and v_next in ('paid','pending_payment','cancelled')) or (v_current='paid' and v_next in ('confirmed','cancelled')) or (v_current='confirmed' and v_next in ('preparing','cancelled')) or (v_current='preparing' and v_next in ('ready','cancelled')) or (v_current='ready' and v_next in ('out_for_delivery','completed','cancelled')) or (v_current='out_for_delivery' and v_next in ('completed','cancelled')) or (v_current='ready_for_pickup' and v_next in ('completed','cancelled'))) then raise exception 'Transição de estado inválida: % → %.',v_current,v_next using errcode='23514';end if;
+ if v_next='confirmed' then
+  perform public.staff_reserve_order_stock(p_order_id);
+  if not exists(select 1 from public.fulfillments where order_id=p_order_id and status<>'cancelled') then insert into public.fulfillments(order_id,type,status,contact_phone,notes) select v_order.id,case when coalesce(v_order.notes,'') ilike '%levant%' then 'pickup'::public.fulfillment_type else 'delivery'::public.fulfillment_type end,'pending',c.phone,'Criada após confirmação' from public.customers c where c.id=v_order.customer_id;end if;
+ end if;
+ if v_next='completed' then perform public.staff_consume_order_stock(p_order_id);end if;
+ if v_next='cancelled' then perform public.staff_release_order_stock(p_order_id,'Encomenda cancelada');end if;
+ update public.orders set status=p_status,payment_status=case when v_next='paid' then 'verified'::public.payment_status when v_next='payment_submitted' then 'submitted'::public.payment_status else payment_status end,updated_at=now() where id=p_order_id returning * into v_order;
+ if v_next='paid' then update public.payments set status='verified',paid_at=coalesce(paid_at,now()),updated_at=now() where order_id=p_order_id and status in ('pending','submitted');end if;
+ insert into public.order_events(order_id,status,event_type,message,metadata) values(p_order_id,p_status,'status_changed',nullif(left(p_message,500),''),jsonb_build_object('actor_role',v_role,'previous_status',v_current));
+ return jsonb_build_object('id',v_order.id,'reference',v_order.reference,'status',v_order.status,'payment_status',v_order.payment_status,'updated_at',v_order.updated_at);
+end;$function$;
+
+create or replace function public.staff_update_fulfillment(p_fulfillment_id uuid,p_status public.fulfillment_status,p_scheduled_for timestamptz default null,p_notes text default null)
+returns jsonb language plpgsql set search_path=public,private,pg_temp as $function$
+declare v_f public.fulfillments%rowtype;v_o public.orders%rowtype;v_next public.order_status;v_allowed boolean:=false;
+begin
+ if not private.has_staff_role(array['super_admin'::user_role,'admin'::user_role,'manager'::user_role,'logistics'::user_role]) then raise exception 'Sem permissões para gerir logística.' using errcode='42501';end if;
+ select * into v_f from public.fulfillments where id=p_fulfillment_id for update;if not found then raise exception 'Operação logística não encontrada.';end if;
+ select * into v_o from public.orders where id=v_f.order_id for update;if v_f.status=p_status then raise exception 'A operação já se encontra neste estado.';end if;
+ v_allowed:=case when v_f.status='pending' and p_status in ('scheduled','cancelled') then true when v_f.status='scheduled' and p_status in ('ready','cancelled') then true when v_f.status='ready' and p_status='out_for_delivery' and v_f.type='delivery' then true when v_f.status='ready' and p_status='completed' and v_f.type='pickup' then true when v_f.status='out_for_delivery' and p_status in ('completed','cancelled') then true else false end;
+ if not v_allowed then raise exception 'Transição logística inválida para o tipo e estado actual.' using errcode='23514';end if;
+ if p_status='completed' and v_o.status not in ('ready','out_for_delivery','ready_for_pickup') then raise exception 'A encomenda ainda não está pronta para conclusão.' using errcode='23514';end if;
+ if p_status='completed' then perform public.staff_consume_order_stock(v_o.id);elsif p_status='cancelled' then perform public.staff_release_order_stock(v_o.id,'Operação logística cancelada');end if;
+ update public.fulfillments set status=p_status,scheduled_for=coalesce(p_scheduled_for,scheduled_for),notes=coalesce(nullif(left(p_notes,500),''),notes),updated_at=now() where id=p_fulfillment_id returning * into v_f;
+ v_next:=case when p_status='out_for_delivery' then 'out_for_delivery'::order_status when p_status='ready' and v_f.type='pickup' then 'ready_for_pickup'::order_status when p_status='ready' then 'ready'::order_status when p_status='completed' then 'completed'::order_status when p_status='cancelled' then 'cancelled'::order_status else v_o.status end;
+ if v_next<>v_o.status then update public.orders set status=v_next,updated_at=now() where id=v_o.id;end if;
+ insert into public.order_events(order_id,status,event_type,message,metadata) values(v_o.id,v_next,'fulfillment_'||p_status::text,coalesce(nullif(left(p_notes,500),''),'Estado logístico actualizado'),jsonb_build_object('fulfillment_id',p_fulfillment_id));
+ return jsonb_build_object('fulfillment_id',v_f.id,'status',v_f.status,'order_id',v_o.id,'order_status',v_next);
+end;$function$;
+grant execute on function public.staff_record_stock_movement(uuid,text,numeric,text) to authenticated;
+grant execute on function public.staff_reserve_order_stock(uuid) to authenticated;
+grant execute on function public.staff_consume_order_stock(uuid) to authenticated;
+grant execute on function public.staff_update_order_status(uuid,public.order_status,text) to authenticated;
+grant execute on function public.staff_update_fulfillment(uuid,public.fulfillment_status,timestamptz,text) to authenticated;
