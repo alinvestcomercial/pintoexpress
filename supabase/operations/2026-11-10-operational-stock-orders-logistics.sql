@@ -6,7 +6,7 @@ create index if not exists inventory_movements_lot_created_idx on public.invento
 
 create or replace function public.staff_record_stock_movement(p_lot_id uuid,p_movement_type text,p_quantity numeric,p_reason text)
 returns jsonb language plpgsql set search_path=public,private,pg_temp as $function$
-declare v_lot public.inventory_lots%rowtype;
+declare v_lot public.inventory_lots%rowtype;v_record_type text;
 begin
  if not private.has_staff_role(array['super_admin'::user_role,'admin'::user_role,'manager'::user_role,'logistics'::user_role]) then raise exception 'Sem permissões para movimentar stock.' using errcode='42501';end if;
  if p_movement_type not in ('entry','adjustment') or p_quantity=0 or p_quantity is null or nullif(trim(p_reason),'') is null then raise exception 'Tipo, quantidade e motivo são obrigatórios.' using errcode='22023';end if;
@@ -14,10 +14,10 @@ begin
  if not found then raise exception 'Lote não encontrado.';end if;
  if p_movement_type='entry' and p_quantity<0 then raise exception 'Uma entrada deve ter quantidade positiva.';end if;
  if p_movement_type='adjustment' and v_lot.available_quantity+p_quantity<0 then raise exception 'O ajuste não pode deixar o stock disponível negativo.' using errcode='23514';end if;
+ v_record_type:=case when p_movement_type='adjustment' and p_quantity<0 then 'adjustment_out' when p_movement_type='adjustment' then 'adjustment_in' else 'entry' end;
  update public.inventory_lots set available_quantity=available_quantity+p_quantity,updated_at=now() where id=p_lot_id returning * into v_lot;
- insert into public.inventory_movements(inventory_lot_id,movement_type,quantity,notes,created_by)
- values(p_lot_id,p_movement_type,abs(p_quantity),left(trim(p_reason),300),auth.uid());
- return jsonb_build_object('lot_id',p_lot_id,'movement_type',p_movement_type,'quantity',p_quantity,'available_quantity',v_lot.available_quantity,'reserved_quantity',v_lot.reserved_quantity);
+ insert into public.inventory_movements(inventory_lot_id,movement_type,quantity,notes,created_by) values(p_lot_id,v_record_type,abs(p_quantity),left(trim(p_reason),300),auth.uid());
+ return jsonb_build_object('lot_id',p_lot_id,'movement_type',v_record_type,'quantity_delta',p_quantity,'available_quantity',v_lot.available_quantity,'reserved_quantity',v_lot.reserved_quantity);
 end;$function$;
 
 create or replace function public.staff_reserve_order_stock(p_order_id uuid)
