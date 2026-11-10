@@ -24,7 +24,7 @@ create or replace function public.staff_reserve_order_stock(p_order_id uuid)
 returns jsonb language plpgsql set search_path=public,private,pg_temp as $function$
 declare v_item record;v_lot record;v_remaining numeric;v_take numeric;v_reservation_id uuid;v_reserved numeric:=0;v_existing numeric;
 begin
- if not private.has_staff_role(array['super_admin'::user_role,'admin'::user_role,'manager'::user_role,'sales'::user_role,'logistics'::user_role]) then raise exception 'Sem permissões para reservar stock.' using errcode='42501';end if;
+ if not private.has_staff_role(array['super_admin'::user_role,'admin'::user_role,'manager'::user_role,'logistics'::user_role]) then raise exception 'Sem permissões para reservar stock.' using errcode='42501';end if;
  perform 1 from public.orders where id=p_order_id for update;if not found then raise exception 'Encomenda não encontrada.';end if;
  if exists(select 1 from public.stock_reservations where order_id=p_order_id and status='consumed') then raise exception 'O stock desta encomenda já foi consumido.';end if;
  if exists(select 1 from public.stock_reservations where order_id=p_order_id and status='reserved') then select coalesce(sum(quantity),0) into v_existing from public.stock_reservations where order_id=p_order_id and status='reserved';return jsonb_build_object('order_id',p_order_id,'status','already_reserved','quantity',v_existing);end if;
