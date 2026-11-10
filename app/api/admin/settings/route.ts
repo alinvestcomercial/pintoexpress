@@ -18,7 +18,7 @@ export async function PATCH(req:NextRequest){
  const p=await fetch(url+"/rest/v1/rpc/get_my_staff_profile",{method:"POST",headers:h,body:"{}"});
  const rows=await p.json();const role=rows?.[0]?.role;
  if(!p.ok||!["super_admin","admin"].includes(role))return NextResponse.json({error:"Sem permissão para alterar configurações."},{status:403});
- const allowed=["mpesa_enabled","mpesa_limit","bank_transfer_enabled","bank_name","bank_account_name","bank_account_number","bank_nib","whatsapp_number"];
+ const allowed=["mpesa_enabled","","bank_transfer_enabled","bank_name","bank_account_name","bank_account_number","bank_nib","whatsapp_number"];
  const payload=Object.fromEntries(Object.entries(body).filter(([k])=>allowed.includes(k)));payload.updated_at=new Date().toISOString();
  const r=await fetch(url+"/rest/v1/business_settings?id=eq.true",{method:"PATCH",headers:{...h,Prefer:"return=representation"},body:JSON.stringify(payload)});
  if(!r.ok)return NextResponse.json({error:"Não foi possível guardar as configurações."},{status:r.status});
