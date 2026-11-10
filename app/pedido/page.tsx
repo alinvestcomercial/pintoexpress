@@ -102,7 +102,7 @@ export default function PedidoPage(){
       if(whatsapp){
         window.open("https://wa.me/"+whatsapp.replace(/[^0-9]/g,"")+"?text="+encodeURIComponent(message),"_blank","noopener,noreferrer");
       }
-      setFeedback("Pedido registado. Guarde a referência para acompanhar a encomenda. A cobrança só será iniciada depois da validação comercial.");
+      setFeedback("Pedido registado. Guarde a referência para acompanhar a encomenda. A equipa irá dar seguimento ao pedido e às instruções da modalidade escolhida.");
     }catch(error){
       setFeedback(error instanceof Error?error.message:"Não foi possível registar o pedido.");
     }finally{
