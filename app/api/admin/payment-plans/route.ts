@@ -1,0 +1,52 @@
+import {NextRequest,NextResponse} from "next/server";
+import {cookies} from "next/headers";
+
+const url=process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+const financeRoles=["super_admin","admin","manager","finance"];
+
+async function staff(){
+ const token=(await cookies()).get("pe_access_token")?.value;
+ if(!token)return null;
+ const r=await fetch(url+"/rest/v1/rpc/get_my_staff_profile",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:"{}",cache:"no-store"});
+ if(!r.ok)return null;
+ const rows=await r.json();
+ return Array.isArray(rows)&&rows[0]?.active?{token,profile:rows[0]}:null;
+}
+async function rest(path:string,token:string,options:RequestInit={}){
+ return fetch(url+"/rest/v1/"+path,{...options,headers:{apikey:key,Authorization:"Bearer "+token,"Content-Type":"application/json",Prefer:"return=representation",...(options.headers||{})},cache:"no-store"});
+}
+
+export async function GET(){
+ const a=await staff(); if(!a)return NextResponse.json({error:"Sessão inválida."},{status:401});
+ const q=new URLSearchParams({select:"id,order_id,total_amount,installment_count,status,notes,created_at,updated_at,order:orders(reference,total_amount,payment_status,customer:customers(full_name,phone)),installments:payment_installments(id,installment_number,due_date,amount,paid_amount,status,notes)",order:"created_at.desc",limit:"200"});
+ const r=await rest("payment_plans?"+q,a.token); const data=await r.json();
+ return NextResponse.json(r.ok?{plans:data}:{error:"Não foi possível consultar os planos de pagamento."},{status:r.ok?200:502});
+}
+
+export async function POST(req:NextRequest){
+ const a=await staff(); if(!a)return NextResponse.json({error:"Sessão inválida."},{status:401});
+ if(!financeRoles.includes(a.profile.role))return NextResponse.json({error:"Sem permissão para criar planos de pagamento."},{status:403});
+ const b=await req.json(); const orderId=String(b.order_id||""); const installments=Array.isArray(b.installments)?b.installments:[];
+ if(!orderId||!installments.length)return NextResponse.json({error:"Indique a encomenda e as prestações."},{status:400});
+ const existing=await rest("payment_plans?select=id&order_id=eq."+encodeURIComponent(orderId)+"&limit=1",a.token);
+ const ex=await existing.json(); if(existing.ok&&ex.length)return NextResponse.json({error:"Esta encomenda já possui um plano de pagamento."},{status:409});
+ const total=installments.reduce((sum:(number),i:any)=>sum+Number(i.amount||0),0);
+ if(total<=0)return NextResponse.json({error:"O valor das prestações deve ser superior a zero."},{status:400});
+ const planR=await rest("payment_plans",a.token,{method:"POST",body:JSON.stringify({order_id:orderId,total_amount:total,installment_count:installments.length,notes:String(b.notes||"").slice(0,500)||null})});
+ const plan=await planR.json(); if(!planR.ok)return NextResponse.json({error:plan.message||"Não foi possível criar o plano."},{status:400});
+ const planId=plan[0].id;
+ const rows=installments.map((i:any,index:number)=>({payment_plan_id:planId,installment_number:index+1,due_date:i.due_date,amount:Number(i.amount),status:"pending"}));
+ const insR=await rest("payment_installments",a.token,{method:"POST",body:JSON.stringify(rows)});
+ const ins=await insR.json();
+ if(!insR.ok){await rest("payment_plans?id=eq."+planId,a.token,{method:"DELETE"});return NextResponse.json({error:ins.message||"Não foi possível criar as prestações."},{status:400});}
+ return NextResponse.json({plan:plan[0],installments:ins},{status:201});
+}
+
+export async function PATCH(req:NextRequest){
+ const a=await staff(); if(!a)return NextResponse.json({error:"Sessão inválida."},{status:401});
+ if(!financeRoles.includes(a.profile.role))return NextResponse.json({error:"Sem permissão para alterar planos."},{status:403});
+ const b=await req.json(); const id=String(b.id||""); if(!id)return NextResponse.json({error:"Plano inválido."},{status:400});
+ const r=await rest("payment_plans?id=eq."+encodeURIComponent(id),a.token,{method:"PATCH",body:JSON.stringify({status:b.status==="cancelled"?"cancelled":"active",notes:String(b.notes||"").slice(0,500)||null,updated_at:new Date().toISOString()})});
+ const data=await r.json(); return NextResponse.json(r.ok?{plan:data[0]}:{error:data.message||"Não foi possível actualizar o plano."},{status:r.ok?200:400});
+}
