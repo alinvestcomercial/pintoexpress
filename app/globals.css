@@ -933,3 +933,28 @@ html{overflow-x:hidden}body{overflow-x:hidden}img,svg{max-width:100%}button,a,in
 .orders-status-pill.status-out_for_delivery,.orders-status-pill.status-preparing,.orders-status-pill.status-ready,.orders-status-pill.status-ready_for_pickup{background:#edf3fa;color:#426a91}
 @media(max-width:1050px){.orders-hero-art{right:60px;opacity:.55}.orders-card-middle{grid-template-columns:1fr 1fr}.orders-card-items{justify-self:end}.orders-card-controls label>span{display:none}}
 @media(max-width:700px){.orders-workspace{gap:13px}.orders-hero{min-height:180px;padding:21px 19px;border-radius:15px}.orders-hero-copy{max-width:100%}.orders-hero-copy h1{font-size:28px}.orders-hero-copy p{max-width:390px;font-size:10px}.orders-hero-meta{gap:12px;margin-top:14px}.orders-hero-meta span{font-size:9px}.orders-hero-actions{position:absolute;right:14px;top:13px}.orders-refresh{width:34px;height:34px;padding:0;justify-content:center;font-size:0}.orders-hero-art{right:-50px;top:49px;opacity:.18}.orders-kpis{grid-template-columns:1fr 1fr;gap:8px}.orders-kpis>button{min-height:70px;padding:10px;gap:8px}.orders-kpi-icon{width:32px;height:32px}.orders-kpis small{font-size:8px}.orders-kpis strong{font-size:19px}.orders-list-panel{padding:13px;border-radius:13px}.orders-list-heading h2{font-size:17px}.orders-list-heading p{max-width:250px;font-size:9px}.orders-result-count{font-size:8px}.orders-filters{flex-direction:column;gap:7px;margin-top:13px}.orders-search,.orders-status-filter{height:39px}.orders-status-filter{width:100%}.orders-view-tabs{margin-top:10px}.orders-view-tabs button{padding:9px 9px 11px;font-size:9px}.orders-card-top{padding:11px 10px 8px}.orders-reference-mark{width:31px;height:31px}.orders-reference{font-size:11px}.orders-customer{font-size:8px}.orders-card-date{font-size:8px}.orders-card-middle{grid-template-columns:1fr 1fr;gap:10px;padding:10px}.orders-card-value strong{font-size:12px}.orders-card-bottom{align-items:flex-start;flex-direction:column;padding:10px;gap:9px}.orders-progress{width:100%}.orders-card-controls{width:100%;flex-wrap:wrap}.orders-card-controls label{flex:1;min-width:0}.orders-card-controls select{max-width:none;width:100%}.orders-card-controls label>span{display:none}.orders-detail{padding:10px}.orders-detail-grid{grid-template-columns:1fr}.orders-detail-history{grid-column:auto}.orders-detail-box{padding:11px}.orders-detail-title h3{font-size:14px}}
+
+/* Ficha de encomenda: acções contextuais, resumo financeiro e linha temporal */
+.orders-detail-subtitle{margin:4px 0 0;color:#7b887e;font-size:9px}
+.orders-detail-title-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.orders-context-action{height:30px;display:inline-flex;align-items:center;gap:6px;padding:0 10px;border:1px solid #dce8de;border-radius:8px;color:#315f40;text-decoration:none;font-size:9px;font-weight:900;white-space:nowrap}
+.orders-context-action.whatsapp{background:#edf6ef;border-color:#d5e8d9;color:#237345}
+.orders-context-links{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:-2px 0 13px}
+.orders-context-links a{height:32px;display:inline-flex;align-items:center;gap:7px;padding:0 10px;border:1px solid #dce6de;border-radius:8px;background:#fff;color:#315f40;text-decoration:none;font-size:9px;font-weight:900;transition:background .15s,border-color .15s}
+.orders-context-links a:hover{background:#edf5ef;border-color:#b9d0bf}
+.orders-finance-summary{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+.orders-finance-summary>span{display:flex;flex-direction:column;gap:4px;padding:9px;border-radius:8px;background:#f4f8f4}
+.orders-finance-summary small{color:#7e8a80;font-size:8px}
+.orders-finance-summary b{color:#245b39;font-family:Manrope,sans-serif;font-size:12px}
+.orders-timeline{position:relative;display:flex;flex-direction:column;gap:0;padding:3px 0 4px 4px}
+.orders-timeline:before{content:"";position:absolute;left:12px;top:15px;bottom:24px;width:1px;background:#dce7de}
+.orders-timeline-item{position:relative;display:flex;align-items:flex-start;gap:11px;padding:0 0 15px}
+.orders-timeline-node{position:relative;z-index:1;width:18px;height:18px;flex-shrink:0;display:grid;place-items:center;border:1px solid #d6e2d8;border-radius:50%;background:#fff;color:#73927b}
+.orders-timeline-item.done .orders-timeline-node{background:#e9f4ec;border-color:#cce0d0;color:#267346}
+.orders-timeline-item>div{display:flex;flex-direction:column;gap:3px;padding-top:1px}
+.orders-timeline-item b{color:#3e4d42;font-size:9px;font-weight:800}
+.orders-timeline-item small{color:#859087;font-size:8px}
+.orders-timeline-item em{align-self:flex-start;padding:3px 6px;border-radius:5px;background:#f0f4f0;color:#5d7062;font-size:8px;font-style:normal;font-weight:800}
+.orders-timeline-current{position:relative;z-index:1;display:flex;align-items:center;gap:8px;padding-left:0}
+.orders-timeline-current>small{color:#849087;font-size:8px}
+@media(max-width:700px){.orders-detail-title{align-items:flex-start}.orders-detail-title-actions{align-items:flex-end;flex-direction:column}.orders-context-links{gap:6px}.orders-context-links a{flex:1;justify-content:center;padding:0 7px;font-size:8px}.orders-finance-summary b{font-size:10px}}
