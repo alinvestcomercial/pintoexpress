@@ -2,7 +2,7 @@
 import {useEffect,useMemo,useState} from "react";
 import {AlertTriangle,ArrowDownToLine,ArrowLeftRight,Boxes,CalendarDays,CheckCircle2,Clock3,PackagePlus,Plus,RefreshCw,Search,SlidersHorizontal,TrendingDown,Warehouse} from "lucide-react";
 
-type Lot={id:string;lot_code:string;available_quantity:number;reserved_quantity:number;arrival_date:string|null;availability_date:string|null;active:boolean;created_at:string;products?:{name:string;sku:string|null;unit?:string};packages?:{name:string;slug:string}};
+type Lot={id:string;lot_code:string;available_quantity:number;reserved_quantity:number;arrival_date:string|null;availability_date:string|null;active:boolean;created_at:string;products?:{id:string;name:string;sku:string|null;unit?:string};packages?:{id:string;name:string;slug:string}};
 type Movement={id:string;inventory_lot_id:string;order_id:string|null;movement_type:string;quantity:number;notes:string|null;created_at:string;lot?:{lot_code:string};order?:{reference:string}};
 type Reservation={id:string;order_id:string;inventory_lot_id:string;quantity:number;status:string;created_at:string};
 type Catalog={id:string;name:string;sku?:string|null;slug?:string};
