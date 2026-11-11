@@ -1,26 +1,9 @@
 import {NextRequest,NextResponse} from "next/server";
 import {cookies} from "next/headers";
-export async function GET(){
- const token=(await cookies()).get("pe_access_token")?.value;
- if(!token)return NextResponse.json({error:"Não autenticado."},{status:401});
- const url=process.env.NEXT_PUBLIC_SUPABASE_URL!,key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
- const h={apikey:key,Authorization:"Bearer "+token};
- const r=await fetch(url+"/rest/v1/business_settings?select=*&id=eq.true",{headers:h,cache:"no-store"});
- if(!r.ok)return NextResponse.json({error:"Não foi possível carregar as configurações."},{status:r.status});
- const rows=await r.json();return NextResponse.json({settings:rows[0]||null});
-}
-export async function PATCH(req:NextRequest){
- const token=(await cookies()).get("pe_access_token")?.value;
- if(!token)return NextResponse.json({error:"Não autenticado."},{status:401});
- const body=await req.json();
- const url=process.env.NEXT_PUBLIC_SUPABASE_URL!,key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
- const h={apikey:key,Authorization:"Bearer "+token,"Content-Type":"application/json"};
- const p=await fetch(url+"/rest/v1/rpc/get_my_staff_profile",{method:"POST",headers:h,body:"{}"});
- const rows=await p.json();const role=rows?.[0]?.role;
- if(!p.ok||!["super_admin","admin"].includes(role))return NextResponse.json({error:"Sem permissão para alterar configurações."},{status:403});
- const allowed=["mpesa_enabled","bank_transfer_enabled","bank_name","bank_account_name","bank_account_number","bank_nib","whatsapp_number"];
- const payload=Object.fromEntries(Object.entries(body).filter(([k])=>allowed.includes(k)));payload.updated_at=new Date().toISOString();
- const r=await fetch(url+"/rest/v1/business_settings?id=eq.true",{method:"PATCH",headers:{...h,Prefer:"return=representation"},body:JSON.stringify(payload)});
- if(!r.ok)return NextResponse.json({error:"Não foi possível guardar as configurações."},{status:r.status});
- return NextResponse.json({settings:(await r.json())[0]});
-}
+const fields=["mpesa_enabled","bank_transfer_enabled","whatsapp_number","platform_name","platform_tagline","logo_url","favicon_url","support_email","phone_number","address","city","currency","timezone","order_prefix","reservation_expiry_hours","low_stock_threshold","require_payment_proof","auto_reserve_on_confirmation","notify_whatsapp_on_order","notify_whatsapp_on_payment","notify_whatsapp_on_delivery","default_order_status"];
+async function ctx(){const token=(await cookies()).get("pe_access_token")?.value;if(!token)return null;const url=process.env.NEXT_PUBLIC_SUPABASE_URL!,key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;return {token,url,key,h:{apikey:key,Authorization:"Bearer "+token,"Content-Type":"application/json"}}}
+export async function GET(){const c=await ctx();if(!c)return NextResponse.json({error:"Não autenticado."},{status:401});const r=await fetch(c.url+"/rest/v1/business_settings?select=*&id=eq.true",{headers:c.h,cache:"no-store"});if(!r.ok)return NextResponse.json({error:"Não foi possível carregar as configurações."},{status:r.status});const rows=await r.json();const b=await fetch(c.url+"/rest/v1/business_bank_accounts?select=*&business_setting_id=eq.true&order=sort_order.asc",{headers:c.h,cache:"no-store"});return NextResponse.json({settings:{...(rows[0]||{}),banks:b.ok?await b.json():[]}})}
+export async function PATCH(req:NextRequest){const c=await ctx();if(!c)return NextResponse.json({error:"Não autenticado."},{status:401});const body=await req.json();const p=await fetch(c.url+"/rest/v1/rpc/get_my_staff_profile",{method:"POST",headers:c.h,body:"{}"});const rows=await p.json();const role=rows?.[0]?.role;if(!p.ok||!["super_admin","admin"].includes(role))return NextResponse.json({error:"Sem permissão para alterar configurações."},{status:403});
+const payload=Object.fromEntries(fields.filter(k=>k in body).map(k=>[k,body[k]]));payload.updated_at=new Date().toISOString();const r=await fetch(c.url+"/rest/v1/business_settings?id=eq.true",{method:"PATCH",headers:{...c.h,Prefer:"return=representation"},body:JSON.stringify(payload)});if(!r.ok)return NextResponse.json({error:"Não foi possível guardar as configurações."},{status:r.status});
+if(Array.isArray(body.banks)){const del=await fetch(c.url+"/rest/v1/business_bank_accounts?business_setting_id=eq.true",{method:"DELETE",headers:c.h});if(!del.ok)return NextResponse.json({error:"Não foi possível actualizar as contas bancárias."},{status:del.status});if(body.banks.length){const bankPayload=body.banks.map((b:any,i:number)=>({id:b.id&&String(b.id).length>10?b.id:undefined,business_setting_id:true,name:String(b.name||""),account_name:String(b.account_name||""),account_number:String(b.account_number||""),nib:String(b.nib||""),logo_url:b.logo_url||null,active:b.active!==false,sort_order:i}));const clean=bankPayload.map((b:any)=>{if(!b.id)delete b.id;return b});const br=await fetch(c.url+"/rest/v1/business_bank_accounts",{method:"POST",headers:{...c.h,Prefer:"return=representation"},body:JSON.stringify(clean)});if(!br.ok)return NextResponse.json({error:"Não foi possível guardar as contas bancárias."},{status:br.status})}}
+const out=await fetch(c.url+"/rest/v1/business_settings?select=*&id=eq.true",{headers:c.h});const settings=(await out.json())[0]||{};const b=await fetch(c.url+"/rest/v1/business_bank_accounts?select=*&business_setting_id=eq.true&order=sort_order.asc",{headers:c.h});return NextResponse.json({settings:{...settings,banks:b.ok?await b.json():[]}})}
