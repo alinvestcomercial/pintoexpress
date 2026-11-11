@@ -2,7 +2,7 @@
 import {useEffect,useMemo,useState} from "react";
 import {Search,RefreshCw,Plus,Package,Drumstick,ShoppingBasket,Utensils,HeartPulse,Boxes,Pencil,Power,Save,X,Filter,ArrowUpRight,Layers3,Tag} from "lucide-react";
 type Product={id:string;name:string;slug:string;description:string|null;bird_type:string|null;sku:string|null;unit:string;price:number|null;active:boolean;supplier_name?:string|null;cost_price?:number|null;reorder_level?:number;image_url?:string|null;created_at?:string};
-type Pack={id:string;name:string;slug:string;bird_type:string;bird_count:number;description:string|null;price:number|null;active:boolean;created_at?:string};
+type Pack={id:string;name:string;slug:string;bird_type:string;bird_count:number;description:string|null;price:number|null;image_url?:string|null;active:boolean;created_at?:string};
 type Kind="product"|"package";
 const money=(v:number|null)=>v==null?"Sob consulta":new Intl.NumberFormat("pt-MZ",{maximumFractionDigits:0}).format(v)+" MT";
 function category(p:Product){const s=(p.name+" "+(p.description||"")).toLowerCase();if(/pinto|frango|ave|codorniz/.test(s))return "Aves";if(/ra[cç][aã]o|alimento|milho|farelo/.test(s))return "Rações";if(/comedouro|bebedouro|camp[aâ]nula|equipamento/.test(s))return "Equipamentos";if(/vacina|vitamina|medic|desinf|sa[uú]de/.test(s))return "Saúde animal";return "Outros"}
