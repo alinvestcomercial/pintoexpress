@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useMemo,useState} from "react";
+import {useEffect,useState} from "react";
 import {Banknote,ArrowDownLeft,ArrowUpRight,Plus,RefreshCw,Lock,Unlock,History} from "lucide-react";
 type Session={id:string;opened_by:string;status:string;opening_amount:number;expected_amount:number;counted_amount:number|null;difference_amount:number|null;opened_at:string;closed_at:string|null;opened?:{full_name:string}|null};
 type Movement={id:string;session_id:string;movement_type:string;category:string;amount:number;reference:string|null;notes:string|null;created_at:string};
