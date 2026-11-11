@@ -16,7 +16,7 @@ export async function POST(req:NextRequest){
   if(!orderId||!Number.isFinite(amount)||amount<=0||!["mpesa","bank_transfer","cash","other"].includes(method))return NextResponse.json({error:"Indique a encomenda, modalidade e um valor válido."},{status:400});
   if(proofPath&&!new RegExp("^"+orderId.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"/[0-9a-f-]{36}\\.(jpg|png|webp|pdf)$","i").test(proofPath))return NextResponse.json({error:"O ficheiro de comprovativo não corresponde a esta encomenda."},{status:400});
   const r=await fetch(url+"/rest/v1/rpc/staff_create_finance_payment",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+a.token,"Content-Type":"application/json"},body:JSON.stringify({p_order_id:orderId,p_installment_id:installmentId,p_method:method,p_amount:amount,p_external_reference:String(b.external_reference||"").trim().slice(0,120)||null,p_proof_path:proofPath,p_proof_whatsapp_reference:proofWhatsapp}),cache:"no-store"});
-  const d=await r.json();if(!r.ok)return NextResponse.json({error:d.message||d.details||"Não foi possível registar o pagamento."},{status:r.status===403?403:400});
+  const d=await r.json();if(!r.ok){if(proofPath)await fetch(url+"/storage/v1/object/payment-proofs/"+proofPath,{method:"DELETE",headers:{apikey:key,Authorization:"Bearer "+a.token}}).catch(()=>null);return NextResponse.json({error:d.message||d.details||"Não foi possível registar o pagamento."},{status:r.status===403?403:400});}
   return NextResponse.json({payment:d},{status:201});
  }catch(e){return NextResponse.json({error:e instanceof Error?e.message:"Dados inválidos."},{status:400})}
 }
