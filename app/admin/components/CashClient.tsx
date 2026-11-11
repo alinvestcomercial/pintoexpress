@@ -4,7 +4,8 @@ import {Banknote,ArrowDownLeft,ArrowUpRight,Plus,RefreshCw,Lock,Unlock,History} 
 type Session={id:string;opened_by:string;status:string;opening_amount:number;expected_amount:number;counted_amount:number|null;difference_amount:number|null;opened_at:string;closed_at:string|null;opened?:{full_name:string}|null};
 type Movement={id:string;session_id:string;movement_type:string;category:string;amount:number;reference:string|null;notes:string|null;created_at:string;bank_account?:{name:string}|null};
 type Payment={id:string;cash_session_id:string;amount:number;status:string;method:string;created_at:string;order?:{reference:string}|null};
-type Bank={id:string;name:string;account_name:string;account_number:string};\nconst money=(n:number)=>Number(n||0).toLocaleString("pt-MZ",{style:"currency",currency:"MZN"});
+type Bank={id:string;name:string;account_name:string;account_number:string};
+const money=(n:number)=>Number(n||0).toLocaleString("pt-MZ",{style:"currency",currency:"MZN"});
 export default function CashClient({role}:{role:string}){
  const [sessions,S]=useState<Session[]>([]),[movements,M]=useState<Movement[]>([]),[payments,P]=useState<Payment[]>([]),[banks,Banks]=useState<Bank[]>([]),[bankId,BankId]=useState(""),[staffId,Staff]=useState(""),[busy,B]=useState(true),[error,E]=useState(""),[action,A]=useState(""),[saving,SetSaving]=useState(false),[opening,O]=useState("0"),[counted,C]=useState(""),[amount,V]=useState(""),[kind,K]=useState("cash_out"),[category,G]=useState("deposit_to_bank"),[reference,R]=useState(""),[notes,N]=useState("");
  const can=["super_admin","admin","manager","finance"].includes(role),active=sessions.find(s=>s.status==="open"&&s.opened_by===staffId);
