@@ -114,8 +114,8 @@ export default function SettingsClient({role}:{role:string}){
     </div>
    )}
 
-   <div className="settings-grid">
-    <section className="settings-card">
+   <div className="settings-section-intro"><div><span className="eyebrow">CENTRO DE CONTROLO</span><h2>Definições da operação</h2><p>Organize a identidade, pagamentos, vendas, comunicação e logística num único lugar.</p></div><span className="settings-save-hint">Alterações guardadas aplicam-se aos módulos correspondentes.</span></div><div className="settings-grid">
+    <section className="settings-card settings-card-identity">
      <header><div className="settings-icon"><Palette size={18}/></div><div><span className="eyebrow">IDENTIDADE</span><h2>Marca e apresentação</h2><p>Dados usados no website, checkout e comunicações.</p></div></header>
      <div className="settings-form-grid">
       <label>Nome da plataforma<input value={s.platform_name} disabled={!can} onChange={e=>setField("platform_name",e.target.value)}/></label>
@@ -126,7 +126,7 @@ export default function SettingsClient({role}:{role:string}){
      {s.logo_url&&<img className="settings-logo-preview" src={s.logo_url} alt="Logotipo"/>}
     </section>
 
-    <section className="settings-card">
+    <section className="settings-card settings-card-company">
      <header><div className="settings-icon"><Building2 size={18}/></div><div><span className="eyebrow">EMPRESA</span><h2>Dados comerciais</h2><p>Informações institucionais e canais oficiais.</p></div></header>
      <div className="settings-form-grid">
       <label>Email de suporte<input type="email" value={s.support_email} disabled={!can} onChange={e=>setField("support_email",e.target.value)}/></label>
@@ -136,7 +136,7 @@ export default function SettingsClient({role}:{role:string}){
      </div>
     </section>
 
-    <section className="settings-card">
+    <section className="settings-card settings-card-payments">
      <header><div className="settings-icon"><CreditCard size={18}/></div><div><span className="eyebrow">PAGAMENTOS</span><h2>Meios de pagamento</h2><p>M-Pesa e múltiplas contas bancárias.</p></div></header>
      <label className="settings-toggle"><span><b>M-Pesa</b><small>Disponível no checkout.</small></span><input type="checkbox" checked={s.mpesa_enabled} disabled={!can} onChange={e=>setField("mpesa_enabled",e.target.checked)}/><i/></label>
      <label className="settings-toggle"><span><b>Transferência bancária</b><small>Disponível quando existir uma conta activa.</small></span><input type="checkbox" checked={s.bank_transfer_enabled} disabled={!can} onChange={e=>setField("bank_transfer_enabled",e.target.checked)}/><i/></label>
@@ -144,7 +144,7 @@ export default function SettingsClient({role}:{role:string}){
      <button type="button" className="admin-secondary-action settings-add-bank" disabled={!can} onClick={addBank}><Plus size={14}/> Adicionar conta bancária</button>
     </section>
 
-    <section className="settings-card">
+    <section className="settings-card settings-card-communication">
      <header><div className="settings-icon"><MessageCircle size={18}/></div><div><span className="eyebrow">COMUNICAÇÃO</span><h2>WhatsApp e notificações</h2><p>Defina os eventos que podem gerar comunicação.</p></div></header>
      <label>WhatsApp / telefone<input value={s.whatsapp_number} disabled={!can} onChange={e=>setField("whatsapp_number",e.target.value)}/></label>
      <label className="settings-toggle"><span><b>Nova encomenda</b><small>Permitir notificação WhatsApp.</small></span><input type="checkbox" checked={s.notify_whatsapp_on_order} disabled={!can} onChange={e=>setField("notify_whatsapp_on_order",e.target.checked)}/><i/></label>
@@ -152,7 +152,7 @@ export default function SettingsClient({role}:{role:string}){
      <label className="settings-toggle"><span><b>Entrega / logística</b><small>Permitir notificação WhatsApp.</small></span><input type="checkbox" checked={s.notify_whatsapp_on_delivery} disabled={!can} onChange={e=>setField("notify_whatsapp_on_delivery",e.target.checked)}/><i/></label>
     </section>
 
-    <section className="settings-card">
+    <section className="settings-card settings-card-orders">
      <header><div className="settings-icon"><ShoppingCart size={18}/></div><div><span className="eyebrow">ENCOMENDAS</span><h2>Regras do fluxo</h2><p>Controlos que afectam o ciclo da encomenda.</p></div></header>
      <div className="settings-form-grid">
       <label>Prefixo das encomendas<input value={s.order_prefix} disabled={!can} onChange={e=>setField("order_prefix",e.target.value)}/></label>
@@ -164,12 +164,12 @@ export default function SettingsClient({role}:{role:string}){
      <label className="settings-toggle"><span><b>Exigir comprovativo de pagamento</b><small>Controla o fluxo de validação financeira.</small></span><input type="checkbox" checked={s.require_payment_proof} disabled={!can} onChange={e=>setField("require_payment_proof",e.target.checked)}/><i/></label>
     </section>
 
-    <section className="settings-card">
+    <section className="settings-card settings-card-logistics">
      <header><div className="settings-icon"><Truck size={18}/></div><div><span className="eyebrow">LOGÍSTICA</span><h2>Operação de entrega</h2><p>Parâmetros gerais usados pela equipa logística.</p></div></header>
      <div className="settings-rules"><div><b>Moeda</b><span>{s.currency}</span></div><div><b>Fuso horário</b><span>{s.timezone}</span></div><div><b>Reservas</b><span>Expiram após {s.reservation_expiry_hours} horas.</span></div></div>
     </section>
 
-    <section className="settings-card">
+    <section className="settings-card settings-card-system">
      <header><div className="settings-icon"><Settings2 size={18}/></div><div><span className="eyebrow">SISTEMA</span><h2>Ambiente operacional</h2><p>Definições base da plataforma.</p></div></header>
      <div className="settings-form-grid">
       <label>Moeda<input value={s.currency} disabled={!can} onChange={e=>setField("currency",e.target.value)}/></label>
