@@ -1,14 +1,14 @@
 "use client";
 import {useEffect,useMemo,useState} from "react";
 import {Banknote,ArrowDownLeft,ArrowUpRight,Plus,RefreshCw,Lock,Unlock,History} from "lucide-react";
-type Session={id:string;status:string;opening_amount:number;expected_amount:number;counted_amount:number|null;difference_amount:number|null;opened_at:string;closed_at:string|null;opened?:{full_name:string}|null};
+type Session={id:string;opened_by:string;status:string;opening_amount:number;expected_amount:number;counted_amount:number|null;difference_amount:number|null;opened_at:string;closed_at:string|null;opened?:{full_name:string}|null};
 type Movement={id:string;session_id:string;movement_type:string;category:string;amount:number;reference:string|null;notes:string|null;created_at:string};
 type Payment={id:string;cash_session_id:string;amount:number;status:string;method:string;created_at:string;order?:{reference:string}|null};
 const money=(n:number)=>Number(n||0).toLocaleString("pt-MZ",{style:"currency",currency:"MZN"});
 export default function CashClient({role}:{role:string}){
- const [sessions,S]=useState<Session[]>([]),[movements,M]=useState<Movement[]>([]),[payments,P]=useState<Payment[]>([]),[busy,B]=useState(true),[error,E]=useState(""),[action,A]=useState(""),[opening,O]=useState("0"),[counted,C]=useState(""),[amount,V]=useState(""),[kind,K]=useState("cash_out"),[category,G]=useState("deposit_to_bank"),[reference,R]=useState(""),[notes,N]=useState("");
- const can=["super_admin","admin","manager","finance"].includes(role),active=sessions.find(s=>s.status==="open"),mine=active;
- async function load(){B(true);E("");try{const r=await fetch("/api/admin/finance/cash",{cache:"no-store"}),d=await r.json();if(!r.ok)throw Error(d.error);S(d.sessions||[]);M(d.movements||[]);P(d.payments||[])}catch(e){E(e instanceof Error?e.message:"Falha ao carregar caixa.")}finally{B(false)}}
+ const [sessions,S]=useState<Session[]>([]),[movements,M]=useState<Movement[]>([]),[payments,P]=useState<Payment[]>([]),[staffId,Staff]=useState(""),[busy,B]=useState(true),[error,E]=useState(""),[action,A]=useState(""),[opening,O]=useState("0"),[counted,C]=useState(""),[amount,V]=useState(""),[kind,K]=useState("cash_out"),[category,G]=useState("deposit_to_bank"),[reference,R]=useState(""),[notes,N]=useState("");
+ const can=["super_admin","admin","manager","finance"].includes(role),active=sessions.find(s=>s.status==="open"&&s.opened_by===staffId);
+ async function load(){B(true);E("");try{const r=await fetch("/api/admin/finance/cash",{cache:"no-store"}),d=await r.json();if(!r.ok)throw Error(d.error);S(d.sessions||[]);M(d.movements||[]);P(d.payments||[]);Staff(d.current_staff_id||"")}catch(e){E(e instanceof Error?e.message:"Falha ao carregar caixa.")}finally{B(false)}}
  useEffect(()=>{load()},[]);
  const currentPayments=payments.filter(p=>p.cash_session_id===active?.id&&p.status==="verified");
  const currentMoves=movements.filter(m=>m.session_id===active?.id);
