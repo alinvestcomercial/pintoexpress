@@ -5,7 +5,7 @@ const supabaseUrl=process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey=process.env.SUPABASE_SERVICE_ROLE_KEY;
 const verifyToken=process.env.WHATSAPP_VERIFY_TOKEN;
 const appSecret=process.env.WHATSAPP_APP_SECRET;
-const phone=v=>String(v||"").replace(/[^0-9]/g,"");
+const phone=(v:unknown)=>String(v||"").replace(/[^0-9]/g,"");
 const headers=()=>({apikey:serviceKey!,Authorization:"Bearer "+serviceKey!,"Content-Type":"application/json"});
 
 function validSignature(body:string,value:string|null){
